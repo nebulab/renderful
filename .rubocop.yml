@@ -11,3 +11,9 @@ Layout/IndentHash:
 
 RSpec/ExampleLength:
   Enabled: false
+
+Layout/ClosingParenthesisIndentation:
+  Enabled: false
+
+Layout/FirstParameterIndentation:
+  EnforcedStyle: consistent
