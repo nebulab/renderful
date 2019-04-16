@@ -2,11 +2,13 @@
 
 module Renderful
   class Renderer
-    attr_reader :entry, :contentful
+    attr_reader :entry, :client
 
-    def initialize(entry, contentful:)
+    delegate :render, :contentful, to: :client
+
+    def initialize(entry, client:)
       @entry = entry
-      @contentful = contentful
+      @client = client
     end
 
     def render

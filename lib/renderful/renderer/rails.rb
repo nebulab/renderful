@@ -4,7 +4,7 @@ module Renderful
   class Renderer
     class Rails < Renderer
       def render
-        ActionController::Base.renderer.render(view, locals: locals, assigns: assigns)
+        ActionController::Base.renderer.render(partial: view, locals: locals)
       end
 
       private
@@ -14,11 +14,7 @@ module Renderful
       end
 
       def locals
-        fields
-      end
-
-      def assigns
-        {}
+        { entry: entry }
       end
     end
   end

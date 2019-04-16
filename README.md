@@ -49,21 +49,17 @@ Suppose you have the `jumbotron` content type in your Contentful space. This con
 Let's create the `app/renderers/jumbotron_renderer.rb` file:
 
 ```ruby
-class Jumbotron < Renderful::Renderer::Rails
+class JumbotronRenderer < Renderful::Renderer
+  def render
+    <<~HTML
+      <div class="jumbotron">
+        <h1 class="display-4"><%= entry.title %></h1>
+        <p class="lead"><%= entry.content %></p>
+      </div>
+    HTML
+  end
 end
 ```
-
-Since we don't need any custom helpers or logic, this will be enough! All that's left to do is to
-implement the actual Rails view for our component, which we will put in `app/views/renderful/jumbotron.html.erb`:
-
-```erb
-<div class="jumbotron">
-  <h1 class="display-4"><%= title %></h1>
-  <p class="lead"><%= content %></p>
-</div>
-```
-
-As you can see, the content entry's fields are passed to the view as local variables.
 
 ### Nested components
 
@@ -73,35 +69,63 @@ all of the content entries contained in that field:
 
 ```ruby
 # app/components/grid.rb
-class Grid < Renderful::Renderer::Rails
+class Grid < Renderful::Renderer
   def resolved_entries
-    entries.map do |entry|
-      if entry.is_a?(Contentful::Link)
-        entry.resolve(ContentfulClient)
-      else
-        entry
-      end
+    # entries is the name of the references field in Contentful
+    entry.entries.map do |entry|
+      # contentful is an alias for Renderful::Client#contentful
+      entry.is_a?(Contentful::Link) ? entry.resolve(contentful) : entry
     end
   end
 
-  def locals
-    super.merge(entries: resolved_entries)
+  def render
+    entries = resolved_entries.map do |resolved_entry|
+      # render is an alias for Renderful::Client#render
+      <<~HTML
+        <div class="grid-entry">
+          #{render(resolved_entry)}
+        </div>
+      HTML
+    end
+    
+    <<~HTML
+      <div class="grid">#{entries}</div>
+    HTML
   end
 end
-``` 
+```
 
-Then, in your view:
+### Rails integration
+
+If you are using Ruby on Rails and you want to use ERB instead of including HTML in your renderers,
+you can inherit from the Rails renderer:
+
+```ruby
+class JumbotronRenderer < Renderful::Renderer::Rails
+end
+```
+
+Then, create a `app/views/renderful/_jumbotron.html.erb` partial:
 
 ```erb
-<%# app/views/renderful/grid.html.erb %>
-<div class="grid">
-  <% entries.each do |entry| %>
-    <div class="grid-entry">
-      <%= entry.render %>
-    </div>
-  <% end %>
+<div class="jumbotron">
+  <h1 class="display-4"><%= entry.title %></h1>
+  <p class="lead"><%= entry.content %></p>
 </div>
-``` 
+```
+
+As you can see, you can access the Contentful entry via the `entry` local variable.
+
+If you want, you can also add your own locals:
+
+```ruby
+class JumbotronRenderer < Renderful::Renderer::Rails
+  def locals
+    italian_title = title.gsub(/hello/, 'ciao')
+    super.merge(italian_title: italian_title)
+  end
+end
+```
 
 ## Development
 

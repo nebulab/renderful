@@ -16,7 +16,7 @@ module Renderful
         fail NoRendererError, entry
       end
 
-      renderer.new(entry, contentful: contentful).render
+      renderer.new(entry, client: self).render
     end
   end
 end
