@@ -142,10 +142,10 @@ You would then access them like regular locals:
 </div>
 ```
 
-#### renderer and client
+#### Resolution in ERB views
 
-You also get access to the `Renderful::Render` and `Renderful::Client` objects, which is useful for
-instance if you need to render resolved fields as in our `Grid` example:
+If you need to render resolved fields (as in our `Grid` example), you can use `renderer` and
+`client` to access the `Renderful::Render` and `Renderful::Client` objects:
 
 ```erb
 <%# app/views/renderful/_grid.html.erb %>
