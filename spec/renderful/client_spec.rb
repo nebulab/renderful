@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Renderful::Client do
   subject { described_class.instance }
 

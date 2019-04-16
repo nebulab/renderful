@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renderful
   class Client < Delegator
     include Singleton
@@ -13,7 +15,7 @@ module Renderful
     end
 
     def initialize
-      @client ||= ::Contentful::Client.new(
+      @client = ::Contentful::Client.new(
         space: Renderful.space,
         access_token: Renderful.access_token,
         dynamic_entries: :auto,
