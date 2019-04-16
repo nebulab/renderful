@@ -126,7 +126,7 @@ If you want, you can also add your own locals:
 ```ruby
 class JumbotronRenderer < Renderful::Renderer::Rails
   def locals
-    italian_title = title.gsub(/hello/, 'ciao')
+    italian_title = entry.title.gsub(/hello/, 'ciao')
     super.merge(italian_title: italian_title)
   end
 end
