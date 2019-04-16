@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Renderful
-  class Component < Contentful::Component
+  class Component < Contentful::Entry
     def render
       ActionController::Base.renderer.render(view, locals: locals, assigns: assigns)
     end

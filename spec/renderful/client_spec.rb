@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
+
 RSpec.describe Renderful::Client do
-  subject { described_class.instance }
+  subject(:client) { described_class.instance }
 
   let(:contentful_client) { instance_double('Contentful::Client') }
 
@@ -12,7 +14,7 @@ RSpec.describe Renderful::Client do
   it 'delegates methods to the Contentful client' do
     allow(contentful_client).to receive(:entries).and_return([])
 
-    entries = subject.entries
+    entries = client.entries
 
     expect(entries).to eq([])
   end
