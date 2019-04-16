@@ -6,26 +6,18 @@ require 'action_controller'
 
 RSpec.describe Renderful::Renderer::Rails do
   subject(:renderer) do
-    TestComponentRenderer.new(entry, contentful: contentful)
+    TestComponentRenderer.new(entry, client: client)
   end
 
   let(:entry) { OpenStruct.new(content_type: OpenStruct.new(id: 'testComponent')) }
-  let(:contentful) { instance_double('Contentful::Client') }
+  let(:client) { instance_double('Renderful::Client') }
 
   let(:rails_renderer) { instance_spy('ActionController::Renderer') }
 
   before(:all) do # rubocop:disable RSpec/BeforeAfterAll
     TestComponentRenderer = Class.new(described_class) do
-      def assigns
-        { test_assign: 'assign_value' }
-      end
-
-      def fields
-        { test_field: 'field_value' }
-      end
-
       def locals
-        super.merge(test_local: 'local_value')
+        { test_local: 'local_value' }
       end
     end
   end
@@ -44,37 +36,31 @@ RSpec.describe Renderful::Renderer::Rails do
     it 'infers the correct component view' do
       renderer.render
 
-      expect(rails_renderer).to have_received(:render).with(
-        'renderful/test_component',
-        any_args,
-      )
+      expect(rails_renderer).to have_received(:render).with(a_hash_including(
+        partial: 'renderful/test_component',
+      ))
     end
 
     it 'passes locals to the view' do
       renderer.render
 
-      expect(rails_renderer).to have_received(:render).with(
-        any_args,
-        a_hash_including(
-          assigns: {
-            test_assign: 'assign_value',
-          },
+      expect(rails_renderer).to have_received(:render).with(a_hash_including(
+        locals: a_hash_including(
+          test_local: 'local_value',
         ),
-      )
+      ))
     end
 
-    it 'passes assigns to the view' do
+    it 'passes the entry, renderer and client to the view' do
       renderer.render
 
-      expect(rails_renderer).to have_received(:render).with(
-        any_args,
-        a_hash_including(
-          locals: a_hash_including(
-            test_field: 'field_value',
-            test_local: 'local_value',
-          ),
+      expect(rails_renderer).to have_received(:render).with(a_hash_including(
+        locals: a_hash_including(
+          entry: entry,
+          renderer: renderer,
+          client: client,
         ),
-      )
+      ))
     end
   end
 end

@@ -23,7 +23,7 @@ RSpec.describe Renderful::Client do
       it 'renders the content type with its renderer' do
         renderer = instance_double('Renderful::Renderer')
         allow(renderer_klass).to receive(:new)
-          .with(entry, contentful: contentful)
+          .with(entry, client: client)
           .and_return(renderer)
         allow(renderer).to receive(:render).and_return('render_output')
 
