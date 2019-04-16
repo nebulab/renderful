@@ -14,7 +14,7 @@ module Renderful
       end
 
       def default_locals
-        { entry: entry, client: client }
+        { entry: entry, client: client, renderer: self }
       end
     end
   end

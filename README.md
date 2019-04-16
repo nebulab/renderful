@@ -80,11 +80,11 @@ class Grid < Renderful::Renderer
   resolve :blocks
 
   def render
-    entries = resolved_entries.map do |resolved_entry|
+    entries = blocks.map do |block|
       # `client` can be used to access the Renderful::Client instance
       <<~HTML
         <div class="grid-entry">
-          #{client.render(resolved_entry)}
+          #{client.render(block)}
         </div>
       HTML
     end
@@ -126,6 +126,19 @@ class JumbotronRenderer < Renderful::Renderer::Rails
     { italian_title: italian_title }
   end
 end
+```
+
+You also get access to the renderer object, which is useful for instance if you need resolved
+fields:
+
+```erb
+<div class="grid">
+  <% renderer.blocks.each do |block| %>
+    <div class="grid-entry">
+      <%= client.render(block) %>
+    </div>
+  <% end %>
+</div>
 ```
 
 ## Development
