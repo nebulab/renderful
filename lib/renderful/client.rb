@@ -1,33 +1,22 @@
 # frozen_string_literal: true
 
 module Renderful
-  class Client < Delegator
-    include Singleton
+  class Client
+    attr_reader :contentful, :renderers
 
-    class << self
-      def method_missing(method, *args, &block)
-        instance.respond_to?(method) ? instance.send(method, *args, &block) : super
-      end
-
-      def respond_to_missing?(method)
-        instance.respond_to?(method) || super
-      end
+    def initialize(contentful:, renderers: {})
+      @contentful = contentful
+      @renderers = renderers
     end
 
-    def initialize
-      @client = ::Contentful::Client.new(
-        space: Renderful.space,
-        access_token: Renderful.access_token,
-        dynamic_entries: :auto,
-        entry_mapping: Renderful.mappings,
-        resource_mapping: {
-          'Entry' => Component,
-        }
-      )
-    end
+    def render(entry)
+      renderer = renderers[entry.content_type.id]
 
-    def __getobj__
-      @client
+      unless renderer
+        fail NoRendererError, entry
+      end
+
+      renderer.new(entry, contentful: contentful).render
     end
   end
 end

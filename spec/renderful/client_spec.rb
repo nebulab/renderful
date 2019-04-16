@@ -3,19 +3,44 @@
 require 'spec_helper'
 
 RSpec.describe Renderful::Client do
-  subject(:client) { described_class.instance }
+  subject(:client) { described_class.new(contentful: contentful, renderers: renderers) }
 
-  let(:contentful_client) { instance_double('Contentful::Client') }
-
-  before do
-    allow(Contentful::Client).to receive(:new).and_return(contentful_client)
+  let(:contentful) { instance_double('Contentful::Client') }
+  let(:renderers) do
+    {
+      'testContentType' => renderer_klass,
+    }
   end
 
-  it 'delegates methods to the Contentful client' do
-    allow(contentful_client).to receive(:entries).and_return([])
+  let(:renderer_klass) { class_double('Renderful::Renderer') }
 
-    entries = client.entries
+  describe '#render' do
+    let(:entry) { OpenStruct.new(content_type: OpenStruct.new(id: content_type_id)) }
 
-    expect(entries).to eq([])
+    context 'when a renderer has been registered for the provided content type' do
+      let(:content_type_id) { 'testContentType' }
+
+      it 'renders the content type with its renderer' do
+        renderer = instance_double('Renderful::Renderer')
+        allow(renderer_klass).to receive(:new)
+          .with(entry, contentful: contentful)
+          .and_return(renderer)
+        allow(renderer).to receive(:render).and_return('render_output')
+
+        result = client.render(entry)
+
+        expect(result).to eq('render_output')
+      end
+    end
+
+    context 'when no renderer has been registered for the provided content type' do
+      let(:content_type_id) { 'unknownContentType' }
+
+      it 'raises a NoRendererError' do
+        expect {
+          client.render(entry)
+        }.to raise_error(Renderful::NoRendererError)
+      end
+    end
   end
 end

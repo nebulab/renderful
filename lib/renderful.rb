@@ -2,16 +2,11 @@
 
 require 'contentful'
 
+require 'renderful/no_renderer_error'
 require 'renderful/client'
-require 'renderful/component'
+require 'renderful/renderer'
+require 'renderful/renderer/rails'
 require 'renderful/version'
 
 module Renderful
-  class << self
-    attr_accessor :space, :access_token, :mappings
-
-    def configure
-      yield self
-    end
-  end
 end

@@ -26,18 +26,17 @@ $ gem install renderful
 Once you have installed the gem, you can configure it via the `.configure` method:
 
 ```ruby
-Renderful.configure do |config|
-  config.space = 'CONTENTFUL_SPACE_ID'
-  config.access_token = 'CONTENTFUL_ACCESS_TOKEN'
-  
-  # The `mappings` attribute should be a hash of content type to component class mappings.
-  # See below to understand how components should be implemented. 
-  config.mappings = {
-    'jumbotron' => Jumbotron,
-    'banner' => Banner,
-    'textBlock' => TextBlock,
+ContentfulClient = Contentful::Client.new(
+  space: 'CONTENTFUL_SPACE_ID',
+  access_token: 'CONTENTFUL_ACCESS_TOKEN',
+)
+
+RenderfulClient = Renderful.new(
+  contentful: contentful,
+  renderers: {
+    'jumbotron' => JumbotronRenderer
   }
-end
+)
 ``` 
 
 (This should go in an initializer in a Rails app, or in its equivalent for your framework.)
@@ -47,10 +46,10 @@ end
 Suppose you have the `jumbotron` content type in your Contentful space. This content type has the
 `title` and `content` fields, both strings.
 
-Let's create the `app/components/jumbotron.rb` file:
+Let's create the `app/renderers/jumbotron_renderer.rb` file:
 
 ```ruby
-class Jumbotron < Renderful::Component
+class Jumbotron < Renderful::Renderer::Rails
 end
 ```
 
@@ -74,11 +73,11 @@ all of the content entries contained in that field:
 
 ```ruby
 # app/components/grid.rb
-class Grid < Renderful::Component
+class Grid < Renderful::Renderer::Rails
   def resolved_entries
     entries.map do |entry|
-      if entry.is_a?(::Contentful::Link)
-        entry.resolve(::Renderful::Client.instance)
+      if entry.is_a?(Contentful::Link)
+        entry.resolve(ContentfulClient)
       else
         entry
       end

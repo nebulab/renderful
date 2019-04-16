@@ -2,3 +2,12 @@ inherit_from:
   - https://relaxed.ruby.style/rubocop.yml
 
 require: rubocop-rspec
+
+Metrics/BlockLength:
+  Enabled: false
+
+Layout/IndentHash:
+  EnforcedStyle: consistent
+
+RSpec/ExampleLength:
+  Enabled: false
