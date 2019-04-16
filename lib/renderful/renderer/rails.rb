@@ -9,6 +9,10 @@ module Renderful
 
       private
 
+      def locals
+        {}
+      end
+
       def view
         "renderful/#{entry.content_type.id.demodulize.underscore}"
       end

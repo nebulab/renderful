@@ -145,7 +145,7 @@ You would then access them like regular locals:
 #### Resolution in ERB views
 
 If you need to render resolved fields (as in our `Grid` example), you can use `renderer` and
-`client` to access the `Renderful::Render` and `Renderful::Client` objects:
+`client` to access the `Renderful::Renderer` and `Renderful::Client` objects:
 
 ```erb
 <%# app/views/renderful/_grid.html.erb %>

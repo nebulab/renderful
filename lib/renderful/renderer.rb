@@ -27,7 +27,7 @@ module Renderful
       if reference.is_a?(Enumerable)
         reference.map(&method(:resolve))
       elsif reference.is_a?(Contentful::Link)
-        contentful.resolve(reference)
+        reference.resolve(client.contentful)
       else
         reference
       end
