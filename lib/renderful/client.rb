@@ -19,15 +19,7 @@ module Renderful
         dynamic_entries: :auto,
         entry_mapping: Renderful.mappings,
         resource_mapping: {
-          'Space' => Space,
-          'ContentType' => ContentType,
-          'Entry' => Entry,
-          'Asset' => Asset,
-          'Array' => Array,
-          'Link' => Link,
-          'DeletedEntry' => DeletedEntry,
-          'DeletedAsset' => DeletedAsset,
-          'Locale' => Locale,
+          'Entry' => Component,
         }
       )
     end

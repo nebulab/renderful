@@ -50,7 +50,7 @@ Suppose you have the `jumbotron` content type in your Contentful space. This con
 Let's create the `app/components/jumbotron.rb` file:
 
 ```ruby
-class Jumbotron < Renderful::Entry
+class Jumbotron < Renderful::Component
 end
 ```
 
@@ -74,7 +74,7 @@ all of the content entries contained in that field:
 
 ```ruby
 # app/components/grid.rb
-class Grid
+class Grid < Renderful::Component
   def resolved_entries
     entries.map do |entry|
       if entry.is_a?(::Contentful::Link)

@@ -1,5 +1,5 @@
 module Renderful
-  class Entry < Contentful::Entry
+  class Component < Contentful::Component
     def render
       ActionController::Base.renderer.render(view, locals: locals, assigns: assigns)
     end
