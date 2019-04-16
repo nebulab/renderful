@@ -75,24 +75,20 @@ all of the content entries contained in that field:
 ```ruby
 # app/components/grid.rb
 class Grid < Renderful::Renderer
-  def resolved_entries
-    # `entries` is the name of the references field in Contentful
-    entry.entries.map do |entry|
-      # `contentful` is an alias for Renderful::Client#contentful
-      entry.is_a?(Contentful::Link) ? entry.resolve(contentful) : entry
-    end
-  end
+  # This will define a `resolved_blocks` method that reads external references 
+  # from the `blocks` fields and turns them into Contentful::Entry instances
+  resolve :blocks
 
   def render
     entries = resolved_entries.map do |resolved_entry|
-      # `render` is an alias for Renderful::Client#render
+      # `client` can be used to access the Renderful::Client instance
       <<~HTML
         <div class="grid-entry">
-          #{render(resolved_entry)}
+          #{client.render(resolved_entry)}
         </div>
       HTML
     end
-    
+
     <<~HTML
       <div class="grid">#{entries}</div>
     HTML
@@ -127,7 +123,7 @@ If you want, you can also add your own locals:
 class JumbotronRenderer < Renderful::Renderer::Rails
   def locals
     italian_title = entry.title.gsub(/hello/, 'ciao')
-    super.merge(italian_title: italian_title)
+    { italian_title: italian_title }
   end
 end
 ```

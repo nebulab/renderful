@@ -4,7 +4,7 @@ module Renderful
   class Renderer
     class Rails < Renderer
       def render
-        ActionController::Base.renderer.render(partial: view, locals: locals)
+        ActionController::Base.renderer.render(partial: view, locals: locals.merge(default_locals))
       end
 
       private
@@ -13,8 +13,8 @@ module Renderful
         "renderful/#{entry.content_type.id.demodulize.underscore}"
       end
 
-      def locals
-        { entry: entry }
+      def default_locals
+        { entry: entry, client: client }
       end
     end
   end
