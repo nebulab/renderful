@@ -6,6 +6,8 @@ module Renderful
       ActionController::Base.renderer.render(view, locals: locals, assigns: assigns)
     end
 
+    private
+
     def view
       "renderful/#{self.class.to_s.demodulize.underscore}"
     end

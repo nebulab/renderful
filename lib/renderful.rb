@@ -7,8 +7,6 @@ require 'renderful/component'
 require 'renderful/version'
 
 module Renderful
-  class Error < StandardError; end
-
   class << self
     attr_accessor :space, :access_token, :mappings
 
