@@ -23,7 +23,7 @@ Or install it yourself as:
 $ gem install renderful
 ```
 
-Once you have installed the gem, you can configure it via the `.configure` method:
+Once you have installed the gem, you can configure it like this:
 
 ```ruby
 ContentfulClient = Contentful::Client.new(
