@@ -117,6 +117,8 @@ Then, create an `app/views/renderful/_jumbotron.html.erb` partial:
 
 As you can see, you can access the Contentful entry via the `entry` local variable.
 
+#### Custom locals
+
 If you want, you can also add your own locals:
 
 ```ruby
@@ -128,10 +130,25 @@ class JumbotronRenderer < Renderful::Renderer::Rails
 end
 ```
 
-You also get access to the renderer object, which is useful for instance if you need resolved
-fields:
+You would then access them like regular locals:
 
 ```erb
+<div class="jumbotron">
+  <h1 class="display-4">
+    <%= entry.title %>
+    (<%= italian_title %>) 
+  </h1>
+  <p class="lead"><%= entry.content %></p>
+</div>
+```
+
+#### renderer and client
+
+You also get access to the `Renderful::Render` and `Renderful::Client` objects, which is useful for
+instance if you need to render resolved fields as in our `Grid` example:
+
+```erb
+<%# app/views/renderful/_grid.html.erb %>
 <div class="grid">
   <% renderer.blocks.each do |block| %>
     <div class="grid-entry">
