@@ -76,16 +76,16 @@ all of the content entries contained in that field:
 # app/components/grid.rb
 class Grid < Renderful::Renderer
   def resolved_entries
-    # entries is the name of the references field in Contentful
+    # `entries` is the name of the references field in Contentful
     entry.entries.map do |entry|
-      # contentful is an alias for Renderful::Client#contentful
+      # `contentful` is an alias for Renderful::Client#contentful
       entry.is_a?(Contentful::Link) ? entry.resolve(contentful) : entry
     end
   end
 
   def render
     entries = resolved_entries.map do |resolved_entry|
-      # render is an alias for Renderful::Client#render
+      # `render` is an alias for Renderful::Client#render
       <<~HTML
         <div class="grid-entry">
           #{render(resolved_entry)}
@@ -110,7 +110,7 @@ class JumbotronRenderer < Renderful::Renderer::Rails
 end
 ```
 
-Then, create a `app/views/renderful/_jumbotron.html.erb` partial:
+Then, create an `app/views/renderful/_jumbotron.html.erb` partial:
 
 ```erb
 <div class="jumbotron">
