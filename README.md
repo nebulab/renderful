@@ -26,20 +26,18 @@ $ gem install renderful
 Once you have installed the gem, you can configure it like this:
 
 ```ruby
-ContentfulClient = Contentful::Client.new(
+contentful = Contentful::Client.new(
   space: 'CONTENTFUL_SPACE_ID',
   access_token: 'CONTENTFUL_ACCESS_TOKEN',
 )
 
-RenderfulClient = Renderful.new(
+renderful = Renderful.new(
   contentful: contentful,
   renderers: {
-    'jumbotron' => JumbotronRenderer
+    'jumbotron' => contentful
   }
 )
 ``` 
-
-(This should go in an initializer in a Rails app, or in its equivalent for your framework.)
 
 ## Usage
 
@@ -59,6 +57,13 @@ class JumbotronRenderer < Renderful::Renderer
     HTML
   end
 end
+```
+
+You can now render this component by retrieving it from Contentful and rendering it with Renderful:
+
+```ruby
+entry = contentful.entry('jumbotron_entry_id')
+renderful.render(entry)
 ```
 
 ### Nested components
