@@ -172,3 +172,7 @@ will create a git tag for the version, push git commits and tags, and push the `
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/bestmadeco/bmc_renderful.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
