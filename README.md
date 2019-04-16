@@ -33,9 +33,9 @@ Renderful.configure do |config|
   # The `mappings` attribute should be a hash of content type to component class mappings.
   # See below to understand how components should be implemented. 
   config.mappings = {
-    'jumbotron' => Components::Jumbotron,
-    'banner' => Components::Banner,
-    'textBlock' => Components::TextBlock,
+    'jumbotron' => Jumbotron,
+    'banner' => Banner,
+    'textBlock' => TextBlock,
   }
 end
 ``` 
@@ -50,9 +50,7 @@ Suppose you have the `jumbotron` content type in your Contentful space. This con
 Let's create the `app/components/jumbotron.rb` file:
 
 ```ruby
-module Components
-  class Jumbotron < Renderful::Entry
-  end
+class Jumbotron < Renderful::Entry
 end
 ```
 
@@ -65,6 +63,46 @@ implement the actual Rails view for our component, which we will put in `app/vie
   <p class="lead"><%= content %></p>
 </div>
 ```
+
+As you can see, the content entry's fields are passed to the view as local variables.
+
+### Nested components
+
+What if you want to have a `Grid` component that can contain references to other components? It's
+actually quite simple! Simply create a _References_ field for your content, then recursively render
+all of the content entries contained in that field:
+
+```ruby
+# app/components/grid.rb
+class Grid
+  def resolved_entries
+    entries.map do |entry|
+      if entry.is_a?(::Contentful::Link)
+        entry.resolve(::Renderful::Client.instance)
+      else
+        entry
+      end
+    end
+  end
+
+  def locals
+    super.merge(entries: resolved_entries)
+  end
+end
+``` 
+
+Then, in your view:
+
+```erb
+<%# app/views/renderful/grid.html.erb %>
+<div class="grid">
+  <% entries.each do |entry| %>
+    <div class="grid-entry">
+      <%= entry.render %>
+    </div>
+  <% end %>
+</div>
+``` 
 
 ## Development
 
