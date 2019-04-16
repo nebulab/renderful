@@ -34,7 +34,7 @@ contentful = Contentful::Client.new(
 renderful = Renderful.new(
   contentful: contentful,
   renderers: {
-    'jumbotron' => contentful
+    'jumbotron' => JumbotronRenderer,
   }
 )
 ``` 
@@ -92,6 +92,63 @@ class Grid < Renderful::Renderer
     <<~HTML
       <div class="grid">#{entries}</div>
     HTML
+  end
+end
+```
+
+### Caching
+
+You can easily cache the output of your renderers by passing a `cache` key when instantiating the
+client. The value of this key should be an object that responds to the following methods:
+ 
+- `#read(key)`
+- `#write(key, value)`
+- `#delete(key)`
+- `#exist?(key)`
+
+A Redis cache implementation is included out of the box. Here's an example:
+
+```ruby
+renderful = Renderful.new(
+  contentful: contentful,
+  cache: Renderful::Cache::Redis.new(Redis.new(url: 'redis://localhost:6379')),
+  renderers: {
+    'jumbotron' => JumbotronRenderer
+  }
+)
+``` 
+
+If you are using Rails and want to use the Rails cache store for Renderful, you can simply pass
+`Rails.cache`, which responds to the expected interface:
+
+```ruby
+renderful = Renderful.new(
+  contentful: contentful,
+  cache: Rails.cache,
+  renderers: {
+    'jumbotron' => JumbotronRenderer
+  }
+)
+``` 
+
+#### Cache invalidation
+
+The best way to invalidate the cache is through [Contentful webhooks](https://www.contentful.com/developers/docs/concepts/webhooks/).
+
+Renderful ships with a framework-agnostic webhook processor you can use to automatically invalidate
+the cache for all updated content:
+
+```ruby
+Renderful::CacheInvalidator.new(renderful).process_webhook(json_body)
+```
+
+This is how you could use it in a Rails controller:
+
+```ruby
+class ContentfulWebhooksController < ApplicationController
+  def create
+    Renderful::CacheInvalidator.new(RenderfulClient).process_webhook(request.raw_post)
+    head :no_content
   end
 end
 ```

@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Renderful::Client do
-  subject(:client) { described_class.new(contentful: contentful, renderers: renderers) }
+  subject(:client) { described_class.new(contentful: contentful, renderers: renderers, cache: cache) }
 
   let(:contentful) { instance_double('Contentful::Client') }
   let(:renderers) do
@@ -16,20 +16,57 @@ RSpec.describe Renderful::Client do
 
   describe '#render' do
     let(:entry) { OpenStruct.new(content_type: OpenStruct.new(id: content_type_id)) }
+    let(:cache) { instance_spy('Renderful::Cache') }
+
+    before do
+      allow(cache).to receive(:key_for)
+        .with(entry)
+        .and_return('cache_key')
+    end
 
     context 'when a renderer has been registered for the provided content type' do
       let(:content_type_id) { 'testContentType' }
 
-      it 'renders the content type with its renderer' do
-        renderer = instance_double('Renderful::Renderer')
-        allow(renderer_klass).to receive(:new)
-          .with(entry, client: client)
-          .and_return(renderer)
-        allow(renderer).to receive(:render).and_return('render_output')
+      context 'when the output has been cached' do
+        before do
+          allow(cache).to receive(:exist?)
+            .with('cache_key')
+            .and_return(true)
 
-        result = client.render(entry)
+          allow(cache).to receive(:read)
+            .with('cache_key')
+            .and_return('cached output')
+        end
 
-        expect(result).to eq('render_output')
+        it 'returns the cached output' do
+          result = client.render(entry)
+
+          expect(result).to eq('cached output')
+        end
+      end
+
+      context 'when the output has not been cached' do
+        before do
+          allow(cache).to receive(:exist?)
+            .with('cache_key')
+            .and_return(false)
+
+          allow(renderer_klass).to receive(:new)
+            .with(entry, client: client)
+            .and_return(instance_double('Renderful::Renderer', render: 'render_output'))
+        end
+
+        it 'renders the content type with its renderer' do
+          result = client.render(entry)
+
+          expect(result).to eq('render_output')
+        end
+
+        it 'writes the output to the cache' do
+          client.render(entry)
+
+          expect(cache).to have_received(:write).with('cache_key', 'render_output')
+        end
       end
     end
 
