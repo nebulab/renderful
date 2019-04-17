@@ -17,3 +17,6 @@ Layout/ClosingParenthesisIndentation:
 
 Layout/FirstParameterIndentation:
   EnforcedStyle: consistent
+
+RSpec/NestedGroups:
+  Enabled: false
