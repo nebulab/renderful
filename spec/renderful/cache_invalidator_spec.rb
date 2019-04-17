@@ -5,13 +5,7 @@ require 'spec_helper'
 RSpec.describe Renderful::CacheInvalidator do
   subject(:invalidator) { described_class.new(client) }
 
-  let(:client) do
-    instance_double('Renderful::Client', cache: cache)
-  end
-
-  let(:cache) do
-    instance_spy('Renderful::Cache')
-  end
+  let(:client) { instance_double('Renderful::Client', cache: cache) }
 
   describe '#process_webhook' do
     let(:payload) do
@@ -69,17 +63,29 @@ RSpec.describe Renderful::CacheInvalidator do
       JSON
     end
 
-    before do
-      allow(cache).to receive(:key_for)
-        .with(content_type_id: 'moduleImageBanner', entry_id: '6hxhiF6EcKklWANW9BBlVY')
-        .and_return('contentful/moduleImageBanner/6hxhiF6EcKklWANW9BBlVY')
+    context 'when caching is enabled on the client' do
+      let(:cache) { instance_spy('Renderful::Cache') }
+
+      before do
+        allow(cache).to receive(:key_for)
+          .with(content_type_id: 'moduleImageBanner', entry_id: '6hxhiF6EcKklWANW9BBlVY')
+          .and_return('contentful/moduleImageBanner/6hxhiF6EcKklWANW9BBlVY')
+      end
+
+      it 'invalidates the cache for the updated entry' do
+        invalidator.process_webhook(payload)
+
+        expect(cache).to have_received(:delete)
+          .with('contentful/moduleImageBanner/6hxhiF6EcKklWANW9BBlVY')
+      end
     end
 
-    it 'invalidates the cache for the updated entry' do
-      invalidator.process_webhook(payload)
+    context 'when caching is disabled on the client' do
+      let(:cache) { nil }
 
-      expect(cache).to have_received(:delete)
-        .with('contentful/moduleImageBanner/6hxhiF6EcKklWANW9BBlVY')
+      it 'exits early with no errors' do
+        expect { invalidator.process_webhook(payload) }.not_to raise_error
+      end
     end
   end
 end

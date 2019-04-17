@@ -9,6 +9,8 @@ module Renderful
     end
 
     def process_webhook(body)
+      return unless client.cache
+
       params = body.is_a?(String) ? JSON.parse(body) : body
 
       client.cache.delete(client.cache.key_for(
