@@ -67,7 +67,7 @@ RSpec.describe Renderful::CacheInvalidator do
       let(:cache) { instance_spy('Renderful::Cache') }
 
       before do
-        allow(cache).to receive(:key_for)
+        allow(client).to receive(:cache_key_for)
           .with(content_type_id: 'moduleImageBanner', entry_id: '6hxhiF6EcKklWANW9BBlVY')
           .and_return('contentful/moduleImageBanner/6hxhiF6EcKklWANW9BBlVY')
       end

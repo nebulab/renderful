@@ -13,7 +13,7 @@ module Renderful
 
       params = body.is_a?(String) ? JSON.parse(body) : body
 
-      client.cache.delete(client.cache.key_for(
+      client.cache.delete(client.cache_key_for(
         content_type_id: params['sys']['contentType']['sys']['id'],
         entry_id: params['sys']['id'],
       ))

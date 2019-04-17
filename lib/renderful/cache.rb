@@ -2,17 +2,6 @@
 
 module Renderful
   class Cache
-    def key_for(entry)
-      if entry.is_a?(Contentful::Entry)
-        key_for(
-          content_type_id: entry.content_type.id,
-          entry_id: entry.id,
-        )
-      else
-        "contentful/#{entry.fetch(:content_type_id)}⁄#{entry.fetch(:entry_id)}"
-      end
-    end
-
     def exist?(_key)
       raise NotImplementedError
     end
