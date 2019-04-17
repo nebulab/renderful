@@ -66,6 +66,30 @@ entry = contentful.entry('jumbotron_entry_id')
 renderful.render(entry)
 ```
 
+### Rich text rendering
+
+If you have rich-text fields, you can leverage Contentful's [rich_text_renderer](https://github.com/contentful/rich-text-renderer.rb)
+along with a custom local variable:
+
+```ruby
+class TextBlockRenderer < Renderful::Renderer::Rails
+  def html_body
+    RichTextRenderer::Renderer.new.render(entry.body)
+  end
+
+  def locals
+    { html_body: html_body }
+  end
+end
+```
+
+Then, just reference the `html_body` variable as usual:
+
+```erb
+<%# app/views/renderful/_text_block.html.erb %>
+<%= raw html_body %>
+```
+
 ### Nested components
 
 What if you want to have a `Grid` component that can contain references to other components? It's
