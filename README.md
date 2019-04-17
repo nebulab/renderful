@@ -198,6 +198,20 @@ Then, create an `app/views/renderful/_jumbotron.html.erb` partial:
 
 As you can see, you can access the Contentful entry via the `entry` local variable.
 
+#### Custom renderer
+
+The Rails renderer uses `ActionController::Base.renderer` by default, but this prevents you from
+using your own helpers in components. If you want to use a different renderer instead, you can
+override the `renderer` method:
+
+```ruby
+class JumbotronRenderer < Renderful::Renderer::Rails
+  def renderer
+    ApplicationController.renderer
+  end
+end
+``` 
+
 #### Custom locals
 
 If you want, you can also add your own locals:

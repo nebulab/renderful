@@ -4,10 +4,14 @@ module Renderful
   class Renderer
     class Rails < Renderer
       def render
-        ActionController::Base.renderer.render(partial: view, locals: locals.merge(default_locals))
+        renderer.render(partial: view, locals: locals.merge(default_locals))
       end
 
       private
+
+      def renderer
+        ActionController::Base.renderer
+      end
 
       def locals
         {}

@@ -4,7 +4,7 @@ module Renderful
   class Client
     attr_reader :contentful, :renderers, :cache
 
-    def initialize(contentful:, renderers: {}, cache: nil)
+    def initialize(contentful:, renderers:, cache: nil)
       @contentful = contentful
       @renderers = renderers
       @cache = cache
