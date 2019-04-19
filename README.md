@@ -266,7 +266,7 @@ will create a git tag for the version, push git commits and tags, and push the `
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/bestmadeco/bmc_renderful.
+Bug reports and pull requests are welcome on GitHub at https://github.com/nebulab/renderful.
 
 ## License
 
