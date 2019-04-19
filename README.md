@@ -1,5 +1,7 @@
 # Renderful
 
+[![CircleCI](https://circleci.com/gh/nebulab/renderful.svg?style=svg)](https://circleci.com/gh/nebulab/renderful)
+
 Welcome! Renderful is a rendering engine for [Contentful](https://www.contentful.com) spaces. It
 allows you to map your content types to Ruby objects that take care of rendering your content.
 
