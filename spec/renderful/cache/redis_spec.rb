@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_Helper'
+require 'spec_helper'
 
 require 'redis'
 
