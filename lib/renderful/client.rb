@@ -14,10 +14,10 @@ module Renderful
       renderer = renderers[entry.content_type.id]
       fail(NoRendererError, entry) unless renderer
 
-      return cache.read(cache_key_for(entry)) if cache.exist?(cache_key_for(entry))
+      return cache.read(cache_key_for(entry)) if cache&.exist?(cache_key_for(entry))
 
       renderer.new(entry, client: self).render.tap do |output|
-        cache.write(cache_key_for(entry), output)
+        cache&.write(cache_key_for(entry), output)
       end
     end
 
