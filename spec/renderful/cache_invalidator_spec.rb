@@ -70,6 +70,18 @@ RSpec.describe Renderful::CacheInvalidator do
         allow(client).to receive(:cache_key_for)
           .with(content_type_id: 'moduleImageBanner', entry_id: '6hxhiF6EcKklWANW9BBlVY')
           .and_return('contentful/moduleImageBanner/6hxhiF6EcKklWANW9BBlVY')
+
+        contentful = instance_double('Contentful::Client')
+        allow(client).to receive(:contentful).and_return(contentful)
+
+        linking_entry = instance_double('Contentful::Entry')
+        allow(contentful).to receive(:entries)
+          .with(links_to_entry: '6hxhiF6EcKklWANW9BBlVY')
+          .and_return([linking_entry])
+
+        allow(client).to receive(:cache_key_for)
+          .with(linking_entry)
+          .and_return('contentful/page/44292c56a87b9be07ac32b')
       end
 
       it 'invalidates the cache for the updated entry' do
@@ -77,6 +89,13 @@ RSpec.describe Renderful::CacheInvalidator do
 
         expect(cache).to have_received(:delete)
           .with('contentful/moduleImageBanner/6hxhiF6EcKklWANW9BBlVY')
+      end
+
+      it 'invalidates any entries linking to the updated entry' do
+        invalidator.process_webhook(payload)
+
+        expect(cache).to have_received(:delete)
+          .with('contentful/page/44292c56a87b9be07ac32b')
       end
     end
 

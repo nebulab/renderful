@@ -17,6 +17,10 @@ module Renderful
         content_type_id: params['sys']['contentType']['sys']['id'],
         entry_id: params['sys']['id'],
       ))
+
+      client.contentful.entries(links_to_entry: params['sys']['id']).each do |linking_entry|
+        client.cache.delete(client.cache_key_for(linking_entry))
+      end
     end
   end
 end
