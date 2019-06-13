@@ -172,12 +172,19 @@ This is how you could use it in a Rails controller:
 
 ```ruby
 class ContentfulWebhooksController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def create
     Renderful::CacheInvalidator.new(RenderfulClient).process_webhook(request.raw_post)
     head :no_content
   end
 end
 ```
+
+The cache invalidator will not only invalidate the cache for the entry that has been updated, but
+also for any entries linking to it, so that they are re-rendered. This is very useful, for instance,
+if you have a `Page` entry type that contains references to many UI components - when one of the
+components is updated, you want the page to be re-rendered.
 
 ### Rails integration
 
