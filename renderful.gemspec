@@ -35,7 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'redis', '~> 4.1'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4.1'
-  # These are locked because we need to use Hound's versions
-  spec.add_development_dependency 'rubocop', '0.64.0'
-  spec.add_development_dependency 'rubocop-rspec', '1.32.0'
+  spec.add_development_dependency 'rubocop', '~> 0.79.0'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.37'
 end
