@@ -14,7 +14,7 @@ RSpec.describe Renderful::Renderer::Rails do
 
   let(:rails_renderer) { instance_spy('ActionController::Renderer') }
 
-  before(:all) do # rubocop:disable RSpec/BeforeAfterAll
+  before(:all) do
     TestComponentRenderer = Class.new(described_class) do
       def locals
         { test_local: 'local_value' }
@@ -37,30 +37,30 @@ RSpec.describe Renderful::Renderer::Rails do
       renderer.render
 
       expect(rails_renderer).to have_received(:render).with(a_hash_including(
-        partial: 'renderful/test_component',
-      ))
+                                                              partial: 'renderful/test_component',
+                                                            ))
     end
 
     it 'passes locals to the view' do
       renderer.render
 
       expect(rails_renderer).to have_received(:render).with(a_hash_including(
-        locals: a_hash_including(
-          test_local: 'local_value',
-        ),
-      ))
+                                                              locals: a_hash_including(
+                                                                test_local: 'local_value',
+                                                              ),
+                                                            ))
     end
 
     it 'passes the entry, renderer and client to the view' do
       renderer.render
 
       expect(rails_renderer).to have_received(:render).with(a_hash_including(
-        locals: a_hash_including(
-          entry: entry,
-          renderer: renderer,
-          client: client,
-        ),
-      ))
+                                                              locals: a_hash_including(
+                                                                entry: entry,
+                                                                renderer: renderer,
+                                                                client: client,
+                                                              ),
+                                                            ))
     end
   end
 end
