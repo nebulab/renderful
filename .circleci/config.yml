@@ -34,7 +34,7 @@ jobs:
       - run:
           name: Run RSpec
           command: |
-            bundle exec rspec --profile 10 \
+            bundle exec appraisal rspec --profile 10 \
               --format RspecJunitFormatter \
               --out test_results/rspec.xml \
               --format progress \
