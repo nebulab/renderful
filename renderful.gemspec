@@ -28,12 +28,14 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'contentful', '~> 2.11'
-  spec.add_dependency 'rails', '~> 5.0'
+  spec.add_dependency 'rails', ['>= 5.0.0', '< 7']
 
+  spec.add_development_dependency 'appraisal', '~> 2.2'
   spec.add_development_dependency 'bundler', '~> 2.1'
+  spec.add_development_dependency 'combustion', '~> 1.1'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'redis', '~> 4.1'
-  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rspec-rails', '~> 4.0.0.beta4'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4.1'
   spec.add_development_dependency 'rubocop', '~> 0.79.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.37'

@@ -10,13 +10,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
+            - renderful-v1-{{ .Branch }}-{{ .Revision }}
             - renderful-v1-{{ .Branch }}
             - renderful-v1-
       - run:
           name: Bundle Install
           command: bundle check || bundle install
       - save_cache:
-          key: renderful-v1-{{ .Branch }}
+          key: renderful-v1-{{ .Branch }}-{{ .Revision }}
           paths:
             - vendor/bundle
 
@@ -29,12 +30,11 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - renderful-v1-{{ .Branch }}
-            - renderful-v1-
+            - renderful-v1-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Run RSpec
           command: |
-            bundle exec rspec --profile 10 \
+            bundle exec appraisal rspec --profile 10 \
               --format RspecJunitFormatter \
               --out test_results/rspec.xml \
               --format progress \
@@ -51,8 +51,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - renderful-v1-{{ .Branch }}
-            - renderful-v1-
+            - renderful-v1-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Run RuboCop
           command: bundle exec rubocop
