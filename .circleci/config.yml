@@ -1,8 +1,7 @@
-version: 2
 jobs:
-  build:
+  setup:
     docker:
-      - image: circleci/ruby:2.6.2
+      - image: circleci/ruby:2.7.0
         environment:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
@@ -11,17 +10,29 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - renderful-v1-{{ checksum "Gemfile.lock" }}
+            - renderful-v1-{{ .Branch }}
             - renderful-v1-
       - run:
           name: Bundle Install
           command: bundle check || bundle install
       - save_cache:
-          key: renderful-v1-{{ checksum "Gemfile.lock" }}
+          key: renderful-v1-{{ .Branch }}
           paths:
             - vendor/bundle
+
+  test:
+    docker:
+      - image: circleci/ruby:2.7.0
+        environment:
+          BUNDLE_PATH: vendor/bundle
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - renderful-v1-{{ .Branch }}
+            - renderful-v1-
       - run:
-          name: Run rspec in parallel
+          name: Run RSpec
           command: |
             bundle exec rspec --profile 10 \
               --format RspecJunitFormatter \
@@ -30,3 +41,30 @@ jobs:
               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
       - store_test_results:
           path: test_results
+
+  lint:
+    docker:
+      - image: circleci/ruby:2.7.0
+        environment:
+          BUNDLE_PATH: vendor/bundle
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - renderful-v1-{{ .Branch }}
+            - renderful-v1-
+      - run:
+          name: Run RuboCop
+          command: bundle exec rubocop
+
+workflows:
+  version: 2
+  test-and-lint:
+    jobs:
+      - setup
+      - test:
+          requires:
+            - setup
+      - lint:
+          requires:
+            - setup

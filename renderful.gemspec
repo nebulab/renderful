@@ -30,12 +30,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'contentful', '~> 2.11'
   spec.add_dependency 'rails', '~> 5.0'
 
-  spec.add_development_dependency 'bundler', '~> 1.17'
+  spec.add_development_dependency 'bundler', '~> 2.1'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'redis', '~> 4.1'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4.1'
-  # These are locked because we need to use Hound's versions
-  spec.add_development_dependency 'rubocop', '0.64.0'
-  spec.add_development_dependency 'rubocop-rspec', '1.32.0'
+  spec.add_development_dependency 'rubocop', '~> 0.79.0'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.37'
 end

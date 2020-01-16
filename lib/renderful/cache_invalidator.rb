@@ -14,9 +14,9 @@ module Renderful
       params = body.is_a?(String) ? JSON.parse(body) : body
 
       client.cache.delete(client.cache_key_for(
-        content_type_id: params['sys']['contentType']['sys']['id'],
-        entry_id: params['sys']['id'],
-      ))
+                            content_type_id: params['sys']['contentType']['sys']['id'],
+                            entry_id: params['sys']['id'],
+                          ))
 
       client.contentful.entries(links_to_entry: params['sys']['id']).each do |linking_entry|
         client.cache.delete(client.cache_key_for(linking_entry))
