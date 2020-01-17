@@ -9,7 +9,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Added support for Rails 6
+- Added support for Rails 6 ([#5](https://github.com/nebulab/renderful/pull/5))
 
 ### Fixed
 
