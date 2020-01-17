@@ -7,6 +7,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] (2020-01-17)
+
 ### Added
 
 - Added support for Rails 6 ([#5](https://github.com/nebulab/renderful/pull/5))
@@ -19,5 +21,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 First public release.
 
-[Unreleased]: https://github.com/nebulab/renderful/compare/v0.1.0...HEAD 
+[Unreleased]: https://github.com/nebulab/renderful/compare/v0.2.0...HEAD 
+[0.2.0]: https://github.com/nebulab/renderful/compare/v0.1.0...v0.2.0 
 [0.1.0]: https://github.com/nebulab/renderful/tree/v0.1.0
