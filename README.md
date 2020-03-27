@@ -1,6 +1,6 @@
 # Renderful
 
-[![CircleCI](https://circleci.com/gh/bestmadeco/renderful.svg?style=svg)](https://circleci.com/gh/bestmadeco/renderful)
+[![CircleCI](https://circleci.com/gh/nebulab/renderful.svg?style=svg)](https://circleci.com/gh/nebulab/renderful)
 
 Welcome! Renderful is a rendering engine for [Contentful](https://www.contentful.com) spaces. It
 allows you to map your content types to Ruby objects that take care of rendering your content.
@@ -275,7 +275,7 @@ will create a git tag for the version, push git commits and tags, and push the `
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/bestmadeco/renderful.
+Bug reports and pull requests are welcome on GitHub at https://github.com/nebulab/renderful.
 
 ## License
 
@@ -283,4 +283,5 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Credits
 
-Renderful is sponsored and maintained by [Bolt Threads Inc.](https://www.boltthreads.com).
+Renderful was originally developed by [Nebulab](https://nebulab.it) and sponsored by
+[Bolt Threads](https://www.boltthreads.com). It is currently maintained by Nebulab.
