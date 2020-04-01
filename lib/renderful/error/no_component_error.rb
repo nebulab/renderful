@@ -8,7 +8,7 @@ module Renderful
       def initialize(entry, *args)
         @entry = entry
 
-        super "Cannot find component for content type #{entry.content_type.id}", *args
+        super "Cannot find component for content type #{entry.content_type}", *args
       end
     end
   end

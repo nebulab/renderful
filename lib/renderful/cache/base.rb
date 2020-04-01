@@ -18,6 +18,10 @@ module Renderful
       def delete(_key)
         raise NotImplementedError
       end
+
+      def fetch(key)
+        raise NotImplementedError
+      end
     end
   end
 end

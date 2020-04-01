@@ -24,6 +24,14 @@ module Renderful
       def delete(key)
         redis.del(key)
       end
+
+      def fetch(key)
+        return read(key) if exists?(key)
+
+        yield.tap do |value|
+          write(key, value)
+        end
+      end
     end
   end
 end
