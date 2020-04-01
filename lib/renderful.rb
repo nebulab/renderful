@@ -2,7 +2,8 @@
 
 require 'contentful'
 
-require 'renderful/no_component_error'
+require 'renderful/error/base'
+require 'renderful/error/no_component_error'
 require 'renderful/cache/base'
 require 'renderful/cache/redis'
 require 'renderful/cache_invalidator'

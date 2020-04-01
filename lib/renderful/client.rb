@@ -12,7 +12,7 @@ module Renderful
 
     def render(entry)
       component = components[entry.content_type.id]
-      fail(NoComponentError, entry) unless component
+      fail(Error::NoComponentError, entry) unless component
 
       return cache.read(cache_key_for(entry)) if cache&.exist?(cache_key_for(entry))
 

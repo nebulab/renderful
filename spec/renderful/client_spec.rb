@@ -97,7 +97,7 @@ RSpec.describe Renderful::Client do
       it 'raises a NoComponentError' do
         expect {
           client.render(entry)
-        }.to raise_error(Renderful::NoComponentError)
+        }.to raise_error(Renderful::Error::NoComponentError)
       end
     end
   end
