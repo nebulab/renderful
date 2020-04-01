@@ -73,12 +73,9 @@ You can easily cache the output of your components. A Redis cache implementation
 the box. Here's an example:
 
 ```ruby
-renderful = Renderful.new(
-  contentful: contentful,
+RenderfulClient = Renderful.new(
   cache: Renderful::Cache::Redis.new(Redis.new(url: 'redis://localhost:6379')),
-  components: {
-    'jumbotron' => JumbotronComponent
-  }
+  # ...
 )
 ``` 
 
@@ -86,12 +83,9 @@ If you are using Rails and want to use the Rails cache store for Renderful, you 
 `Rails.cache`, which responds to the expected interface:
 
 ```ruby
-renderful = Renderful.new(
-  contentful: contentful,
+RenderfulClient = Renderful.new(ful,
   cache: Rails.cache,
-  components: {
-    'jumbotron' => JumbotronComponent
-  }
+  # ...
 )
 ``` 
 
