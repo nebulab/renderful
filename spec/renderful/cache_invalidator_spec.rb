@@ -64,7 +64,7 @@ RSpec.describe Renderful::CacheInvalidator do
     end
 
     context 'when caching is enabled on the client' do
-      let(:cache) { instance_spy('Renderful::Cache') }
+      let(:cache) { instance_spy('Renderful::Cache::Base') }
 
       before do
         allow(client).to receive(:cache_key_for)

@@ -35,8 +35,8 @@ contentful = Contentful::Client.new(
 
 renderful = Renderful.new(
   contentful: contentful,
-  renderers: {
-    'jumbotron' => JumbotronRenderer,
+  components: {
+    'jumbotron' => JumbotronComponent,
   }
 )
 ``` 
@@ -46,10 +46,10 @@ renderful = Renderful.new(
 Suppose you have the `jumbotron` content type in your Contentful space. This content type has the
 `title` and `content` fields, both strings.
 
-Let's create the `app/renderers/jumbotron_renderer.rb` file:
+Let's create the `app/components/jumbotron_component.rb` file:
 
 ```ruby
-class JumbotronRenderer < Renderful::Renderer
+class JumbotronComponent < Renderful::Component
   def render
     <<~HTML
       <div class="jumbotron">
@@ -74,7 +74,7 @@ If you have rich-text fields, you can leverage Contentful's [rich_text_renderer]
 along with a custom local variable:
 
 ```ruby
-class TextBlockRenderer < Renderful::Renderer::Rails
+class TextBlockComponent < Renderful::Component::Rails
   def html_body
     RichTextRenderer::Renderer.new.render(entry.body)
   end
@@ -100,7 +100,7 @@ all of the content entries contained in that field:
 
 ```ruby
 # app/components/grid.rb
-class Grid < Renderful::Renderer
+class Grid < Renderful::Component
   # This will define a `resolved_blocks` method that reads external references 
   # from the `blocks` fields and turns them into Contentful::Entry instances
   resolve :blocks
@@ -124,7 +124,7 @@ end
 
 ### Caching
 
-You can easily cache the output of your renderers by passing a `cache` key when instantiating the
+You can easily cache the output of your components by passing a `cache` key when instantiating the
 client. The value of this key should be an object that responds to the following methods:
  
 - `#read(key)`
@@ -138,8 +138,8 @@ A Redis cache implementation is included out of the box. Here's an example:
 renderful = Renderful.new(
   contentful: contentful,
   cache: Renderful::Cache::Redis.new(Redis.new(url: 'redis://localhost:6379')),
-  renderers: {
-    'jumbotron' => JumbotronRenderer
+  components: {
+    'jumbotron' => JumbotronComponent
   }
 )
 ``` 
@@ -151,8 +151,8 @@ If you are using Rails and want to use the Rails cache store for Renderful, you 
 renderful = Renderful.new(
   contentful: contentful,
   cache: Rails.cache,
-  renderers: {
-    'jumbotron' => JumbotronRenderer
+  components: {
+    'jumbotron' => JumbotronComponent
   }
 )
 ``` 
@@ -188,11 +188,11 @@ components is updated, you want the page to be re-rendered.
 
 ### Rails integration
 
-If you are using Ruby on Rails and you want to use ERB instead of including HTML in your renderers,
-you can inherit from the Rails renderer:
+If you are using Ruby on Rails and you want to use ERB instead of including HTML in your components,
+you can inherit from the Rails component:
 
 ```ruby
-class JumbotronRenderer < Renderful::Renderer::Rails
+class JumbotronComponent < Renderful::Component::Rails
 end
 ```
 
@@ -209,12 +209,12 @@ As you can see, you can access the Contentful entry via the `entry` local variab
 
 #### Custom renderer
 
-The Rails renderer uses `ActionController::Base.renderer` by default, but this prevents you from
+Rails components use `ActionController::Base.renderer` by default, but this prevents you from
 using your own helpers in components. If you want to use a different renderer instead, you can
 override the `renderer` method:
 
 ```ruby
-class JumbotronRenderer < Renderful::Renderer::Rails
+class JumbotronComponent < Renderful::Component::Rails
   def renderer
     ApplicationController.renderer
   end
@@ -226,7 +226,7 @@ end
 If you want, you can also add your own locals:
 
 ```ruby
-class JumbotronRenderer < Renderful::Renderer::Rails
+class JumbotronComponent < Renderful::Component::Rails
   def locals
     italian_title = entry.title.gsub(/hello/, 'ciao')
     { italian_title: italian_title }
@@ -248,13 +248,13 @@ You would then access them like regular locals:
 
 #### Resolution in ERB views
 
-If you need to render resolved fields (as in our `Grid` example), you can use `renderer` and
-`client` to access the `Renderful::Renderer` and `Renderful::Client` objects:
+If you need to render resolved fields (as in our `Grid` example), you can use `component` and
+`client` to access the `Renderful::Component` and `Renderful::Client` objects:
 
 ```erb
 <%# app/views/renderful/_grid.html.erb %>
 <div class="grid">
-  <% renderer.blocks.each do |block| %>
+  <% component.blocks.each do |block| %>
     <div class="grid-entry">
       <%= client.render(block) %>
     </div>

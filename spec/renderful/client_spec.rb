@@ -4,19 +4,19 @@ require 'spec_helper'
 
 RSpec.describe Renderful::Client do
   subject(:client) do
-    described_class.new(contentful: contentful, renderers: renderers, cache: cache)
+    described_class.new(contentful: contentful, components: components, cache: cache)
   end
 
   let(:contentful) { instance_double('Contentful::Client') }
-  let(:renderers) do
+  let(:components) do
     {
-      'testContentType' => renderer_klass,
+      'testContentType' => component_klass,
     }
   end
 
-  let(:cache) { instance_spy('Renderful::Cache') }
+  let(:cache) { instance_spy('Renderful::Cache::Base') }
 
-  let(:renderer_klass) { class_double('Renderful::Renderer') }
+  let(:component_klass) { class_double('Renderful::Component::Base') }
 
   describe '#cache_key_for' do
     context 'with an entry' do
@@ -43,9 +43,9 @@ RSpec.describe Renderful::Client do
 
   describe '#render' do
     let(:entry) { OpenStruct.new(content_type: OpenStruct.new(id: content_type_id)) }
-    let(:cache) { instance_spy('Renderful::Cache') }
+    let(:cache) { instance_spy('Renderful::Cache::Base') }
 
-    context 'when a renderer has been registered for the provided content type' do
+    context 'when a component has been registered for the provided content type' do
       let(:content_type_id) { 'testContentType' }
 
       context 'when the output has been cached' do
@@ -72,12 +72,12 @@ RSpec.describe Renderful::Client do
             .with(an_instance_of(String))
             .and_return(false)
 
-          allow(renderer_klass).to receive(:new)
+          allow(component_klass).to receive(:new)
             .with(entry, client: client)
-            .and_return(instance_double('Renderful::Renderer', render: 'render_output'))
+            .and_return(instance_double('Renderful::Component::Base', render: 'render_output'))
         end
 
-        it 'renders the content type with its renderer' do
+        it 'renders the content type with its component' do
           result = client.render(entry)
 
           expect(result).to eq('render_output')
@@ -91,13 +91,13 @@ RSpec.describe Renderful::Client do
       end
     end
 
-    context 'when no renderer has been registered for the provided content type' do
+    context 'when no component has been registered for the provided content type' do
       let(:content_type_id) { 'unknownContentType' }
 
-      it 'raises a NoRendererError' do
+      it 'raises a NoComponentError' do
         expect {
           client.render(entry)
-        }.to raise_error(Renderful::NoRendererError)
+        }.to raise_error(Renderful::NoComponentError)
       end
     end
   end

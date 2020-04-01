@@ -2,21 +2,21 @@
 
 module Renderful
   class Client
-    attr_reader :contentful, :renderers, :cache
+    attr_reader :contentful, :components, :cache
 
-    def initialize(contentful:, renderers:, cache: nil)
+    def initialize(contentful:, components:, cache: nil)
       @contentful = contentful
-      @renderers = renderers
+      @components = components
       @cache = cache
     end
 
     def render(entry)
-      renderer = renderers[entry.content_type.id]
-      fail(NoRendererError, entry) unless renderer
+      component = components[entry.content_type.id]
+      fail(NoComponentError, entry) unless component
 
       return cache.read(cache_key_for(entry)) if cache&.exist?(cache_key_for(entry))
 
-      renderer.new(entry, client: self).render.tap do |output|
+      component.new(entry, client: self).render.tap do |output|
         cache&.write(cache_key_for(entry), output)
       end
     end

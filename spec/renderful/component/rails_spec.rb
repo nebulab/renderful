@@ -2,16 +2,16 @@
 
 require 'spec_helper'
 
-RSpec.describe Renderful::Renderer::Rails do
-  subject(:renderer) do
-    TestComponentRenderer.new(entry, client: client)
+RSpec.describe Renderful::Component::Rails do
+  subject(:component) do
+    TestComponent.new(entry, client: client)
   end
 
-  let(:entry) { OpenStruct.new(content_type: OpenStruct.new(id: 'testComponent')) }
+  let(:entry) { OpenStruct.new(content_type: OpenStruct.new(id: 'test')) }
   let(:client) { instance_double('Renderful::Client') }
 
   before(:all) do
-    TestComponentRenderer = Class.new(described_class) do
+    TestComponent = Class.new(described_class) do
       def locals
         { test_local: 'local_value' }
       end
@@ -20,7 +20,7 @@ RSpec.describe Renderful::Renderer::Rails do
 
   describe '#render' do
     it 'renders the correct partial' do
-      result = renderer.render
+      result = component.render
 
       expect(result.strip).to eq('test_local is local_value')
     end
