@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Renderful
-  class Cache
-    class Redis < Cache
+  module Cache
+    class Redis < Base
       attr_reader :redis
 
       def initialize(redis)

@@ -3,7 +3,7 @@
 require 'contentful'
 
 require 'renderful/no_renderer_error'
-require 'renderful/cache'
+require 'renderful/cache/base'
 require 'renderful/cache/redis'
 require 'renderful/cache_invalidator'
 require 'renderful/client'
