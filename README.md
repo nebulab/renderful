@@ -2,8 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/nebulab/renderful.svg?style=svg)](https://circleci.com/gh/nebulab/renderful)
 
-Welcome! Renderful is a rendering engine for [Contentful](https://www.contentful.com) spaces. It
-allows you to map your content types to Ruby objects that take care of rendering your content.
+Welcome! Renderful is a rendering engine for headless CMSs. It allows you to map your content types
+to Ruby objects that take care of rendering your content.
 
 ## Installation
 
@@ -28,16 +28,16 @@ $ gem install renderful
 Once you have installed the gem, you can configure it like this:
 
 ```ruby
-contentful = Contentful::Client.new(
-  space: 'CONTENTFUL_SPACE_ID',
-  access_token: 'CONTENTFUL_ACCESS_TOKEN',
-)
-
-renderful = Renderful.new(
-  contentful: contentful,
+RenderfulClient = Renderful::Client.new(
+  provider: Renderful::Provider::Contentful.new(
+    contentful: Contentful::Client.new(
+      space: 'YOUR_SPACE_ID',
+      access_key: 'YOUR_ACCESS_KEY',
+    ),
+  ),
   components: {
     'jumbotron' => JumbotronComponent,
-  }
+  },
 )
 ``` 
 
@@ -53,86 +53,24 @@ class JumbotronComponent < Renderful::Component
   def render
     <<~HTML
       <div class="jumbotron">
-        <h1 class="display-4"><%= entry.title %></h1>
-        <p class="lead"><%= entry.content %></p>
+        <h1 class="display-4"><%= entry.fields[:title] %></h1>
+        <p class="lead"><%= entry.fields[:content] %></p>
       </div>
     HTML
   end
 end
 ```
 
-You can now render this component by retrieving it from Contentful and rendering it with Renderful:
+You can now render this component like this:
 
 ```ruby
-entry = contentful.entry('jumbotron_entry_id')
-renderful.render(entry)
-```
-
-### Rich text rendering
-
-If you have rich-text fields, you can leverage Contentful's [rich_text_renderer](https://github.com/contentful/rich-text-renderer.rb)
-along with a custom local variable:
-
-```ruby
-class TextBlockComponent < Renderful::Component::Rails
-  def html_body
-    RichTextRenderer::Renderer.new.render(entry.body)
-  end
-
-  def locals
-    { html_body: html_body }
-  end
-end
-```
-
-Then, just reference the `html_body` variable as usual:
-
-```erb
-<%# app/views/renderful/_text_block.html.erb %>
-<%= raw html_body %>
-```
-
-### Nested components
-
-What if you want to have a `Grid` component that can contain references to other components? It's
-actually quite simple! Simply create a _References_ field for your content, then recursively render
-all of the content entries contained in that field:
-
-```ruby
-# app/components/grid.rb
-class Grid < Renderful::Component
-  # This will define a `resolved_blocks` method that reads external references 
-  # from the `blocks` fields and turns them into Contentful::Entry instances
-  resolve :blocks
-
-  def render
-    entries = blocks.map do |block|
-      # `client` can be used to access the Renderful::Client instance
-      <<~HTML
-        <div class="grid-entry">
-          #{client.render(block)}
-        </div>
-      HTML
-    end
-
-    <<~HTML
-      <div class="grid">#{entries}</div>
-    HTML
-  end
-end
+RenderfulClient.render('my_entry_id')
 ```
 
 ### Caching
 
-You can easily cache the output of your components by passing a `cache` key when instantiating the
-client. The value of this key should be an object that responds to the following methods:
- 
-- `#read(key)`
-- `#write(key, value)`
-- `#delete(key)`
-- `#exist?(key)`
-
-A Redis cache implementation is included out of the box. Here's an example:
+You can easily cache the output of your components. A Redis cache implementation is included out of
+the box. Here's an example:
 
 ```ruby
 renderful = Renderful.new(
@@ -159,23 +97,23 @@ renderful = Renderful.new(
 
 #### Cache invalidation
 
-The best way to invalidate the cache is through [Contentful webhooks](https://www.contentful.com/developers/docs/concepts/webhooks/).
+The best way to invalidate the cache is through [webhooks](https://www.contentful.com/developers/docs/concepts/webhooks/).
 
 Renderful ships with a framework-agnostic webhook processor you can use to automatically invalidate
 the cache for all updated content:
 
 ```ruby
-Renderful::CacheInvalidator.new(renderful).process_webhook(json_body)
+RenderfulClient.invalidate_cache_from_webhook(json_body)
 ```
 
 This is how you could use it in a Rails controller:
 
 ```ruby
-class ContentfulWebhooksController < ApplicationController
+class WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    Renderful::CacheInvalidator.new(RenderfulClient).process_webhook(request.raw_post)
+    RenderfulClient.invalidate_cache_from_webhook(request.raw_post)
     head :no_content
   end
 end
@@ -200,12 +138,12 @@ Then, create an `app/views/renderful/_jumbotron.html.erb` partial:
 
 ```erb
 <div class="jumbotron">
-  <h1 class="display-4"><%= entry.title %></h1>
-  <p class="lead"><%= entry.content %></p>
+  <h1 class="display-4"><%= entry.fields[:title] %></h1>
+  <p class="lead"><%= entry.fields[:content] %></p>
 </div>
 ```
 
-As you can see, you can access the Contentful entry via the `entry` local variable.
+As you can see, you can access the content entry via the `entry` local variable.
 
 #### Custom renderer
 
@@ -239,26 +177,10 @@ You would then access them like regular locals:
 ```erb
 <div class="jumbotron">
   <h1 class="display-4">
-    <%= entry.title %>
-    (<%= italian_title %>) 
+    <%= entry.fields[:title] %>
+    (<%= italian_title %>)
   </h1>
-  <p class="lead"><%= entry.content %></p>
-</div>
-```
-
-#### Resolution in ERB views
-
-If you need to render resolved fields (as in our `Grid` example), you can use `component` and
-`client` to access the `Renderful::Component` and `Renderful::Client` objects:
-
-```erb
-<%# app/views/renderful/_grid.html.erb %>
-<div class="grid">
-  <% component.blocks.each do |block| %>
-    <div class="grid-entry">
-      <%= client.render(block) %>
-    </div>
-  <% end %>
+  <p class="lead"><%= entry.fields[:content] %></p>
 </div>
 ```
 
