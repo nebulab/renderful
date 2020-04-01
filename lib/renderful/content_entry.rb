@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renderful
   class ContentEntry
     attr_reader :provider, :id, :content_type, :fields

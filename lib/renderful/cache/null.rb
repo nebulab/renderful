@@ -3,11 +3,11 @@
 module Renderful
   module Cache
     class Null < Base
-      def exist?(key)
+      def exist?(_key)
         false
       end
 
-      def read(key)
+      def read(_key)
         nil
       end
 
@@ -19,7 +19,7 @@ module Renderful
         # noop
       end
 
-      def fetch(key)
+      def fetch(_key)
         nil
       end
     end

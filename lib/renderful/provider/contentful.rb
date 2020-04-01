@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renderful
   module Provider
     class Contentful < Base

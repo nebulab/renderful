@@ -19,7 +19,7 @@ module Renderful
         raise NotImplementedError
       end
 
-      def fetch(key)
+      def fetch(_key)
         raise NotImplementedError
       end
     end

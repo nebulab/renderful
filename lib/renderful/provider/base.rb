@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renderful
   module Provider
     class Base
@@ -11,11 +13,11 @@ module Renderful
         fail NotImplementedError
       end
 
-      def find_entry(entry_id)
+      def find_entry(_entry_id)
         fail NotImplementedError
       end
 
-      def cache_keys_to_invalidate(webhook_body)
+      def cache_keys_to_invalidate(_webhook_body)
         fail NotImplementedError
       end
     end
