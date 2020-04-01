@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Renderful
-  class Cache
-    class Redis < Cache
+  module Cache
+    class Redis < Base
       attr_reader :redis
 
       def initialize(redis)
@@ -23,6 +23,14 @@ module Renderful
 
       def delete(key)
         redis.del(key)
+      end
+
+      def fetch(key)
+        return read(key) if exist?(key)
+
+        yield.tap do |value|
+          write(key, value)
+        end
       end
     end
   end

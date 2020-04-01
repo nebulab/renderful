@@ -2,34 +2,37 @@
 
 module Renderful
   class Client
-    attr_reader :contentful, :renderers, :cache
+    attr_reader :provider, :components, :cache
 
-    def initialize(contentful:, renderers:, cache: nil)
-      @contentful = contentful
-      @renderers = renderers
+    def initialize(provider:, components:, cache: Cache::Null)
+      @provider = provider
+      @components = components
       @cache = cache
     end
 
-    def render(entry)
-      renderer = renderers[entry.content_type.id]
-      fail(NoRendererError, entry) unless renderer
+    def render(entry_id)
+      content_entry = ContentEntry.new(provider: provider, id: entry_id)
 
-      return cache.read(cache_key_for(entry)) if cache&.exist?(cache_key_for(entry))
-
-      renderer.new(entry, client: self).render.tap do |output|
-        cache&.write(cache_key_for(entry), output)
+      cache.fetch(content_entry.cache_key) do
+        content_entry.hydrate
+        component_for_entry(content_entry).render
       end
     end
 
-    def cache_key_for(entry)
-      if entry.respond_to?(:content_type)
-        cache_key_for(
-          content_type_id: entry.content_type.id,
-          entry_id: entry.id,
-        )
-      else
-        "contentful/#{entry.fetch(:content_type_id)}/#{entry.fetch(:entry_id)}"
+    def invalidate_cache_from_webhook(body)
+      provider.cache_keys_to_invalidate(body).each do |cache_key|
+        cache.delete(cache_key)
       end
+    end
+
+    private
+
+    def component_klass_for_entry(content_entry)
+      components[content_entry.content_type] || fail(Error::NoComponentError, content_entry)
+    end
+
+    def component_for_entry(content_entry)
+      component_klass_for_entry(content_entry).new(content_entry, client: self)
     end
   end
 end

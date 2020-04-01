@@ -60,4 +60,38 @@ RSpec.describe Renderful::Cache::Redis do
       expect(redis).to have_received(:del).with('key')
     end
   end
+
+  describe '#fetch' do
+    context 'when the key exists in Redis' do
+      before do
+        allow(redis).to receive(:exists)
+          .with('key')
+          .and_return(true)
+
+        allow(redis).to receive(:get).with('key').and_return('value')
+      end
+
+      it 'returns the stored value' do
+        expect(cache.fetch('key') { fail StandardError }).to eq('value')
+      end
+    end
+
+    context 'when the key does not exist in Redis' do
+      before do
+        allow(redis).to receive(:exists)
+          .with('key')
+          .and_return(false)
+      end
+
+      it 'writes the key to Redis' do
+        cache.fetch('key') { 'value' }
+
+        expect(redis).to have_received(:set).with('key', 'value')
+      end
+
+      it 'returns the value' do
+        expect(cache.fetch('key') { 'value' }).to eq('value')
+      end
+    end
+  end
 end

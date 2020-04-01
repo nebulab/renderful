@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Renderful
-  class Renderer
-    class Rails < Renderer
+  module Component
+    class Rails < Base
       def render
         renderer.render(partial: view, locals: locals.merge(default_locals))
       end
@@ -18,11 +18,11 @@ module Renderful
       end
 
       def view
-        "renderful/#{entry.content_type.id.demodulize.underscore}"
+        "renderful/#{entry.content_type.demodulize.underscore}"
       end
 
       def default_locals
-        { entry: entry, client: client, renderer: self }
+        { entry: entry, client: client, component: self }
       end
     end
   end
