@@ -26,7 +26,7 @@ module Renderful
       end
 
       def fetch(key)
-        return read(key) if exists?(key)
+        return read(key) if exist?(key)
 
         yield.tap do |value|
           write(key, value)

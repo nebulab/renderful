@@ -12,6 +12,7 @@ RSpec.describe Renderful::Client do
   end
 
   let(:provider) { instance_double('Renderful::Provider::Base', cache_prefix: :base) }
+  let(:components) { {} }
   let(:cache) { instance_double('Renderful::Cache::Base') }
 
   let(:content_type_id) { 'testContentType' }
@@ -80,6 +81,24 @@ RSpec.describe Renderful::Client do
           expect { client.render(entry_id) }.to raise_error(Renderful::Error::NoComponentError)
         end
       end
+    end
+  end
+
+  describe '#invalidate_cache_from_webhook' do
+    let(:cache) { instance_spy('Renderful::Cache::Base') }
+
+    let(:payload) { 'dummy payload' }
+
+    before do
+      allow(provider).to receive(:cache_keys_to_invalidate)
+        .with(payload)
+        .and_return(%w[key1])
+    end
+
+    it 'invalidates the cache keys returned by the provider' do
+      client.invalidate_cache_from_webhook(payload)
+
+      expect(cache).to have_received(:delete).with('key1')
     end
   end
 end

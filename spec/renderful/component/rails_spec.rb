@@ -3,11 +3,9 @@
 require 'spec_helper'
 
 RSpec.describe Renderful::Component::Rails do
-  subject(:component) do
-    TestComponent.new(entry, client: client)
-  end
+  subject(:component) { TestComponent.new(entry, client: client) }
 
-  let(:entry) { OpenStruct.new(content_type: OpenStruct.new(id: 'test')) }
+  let(:entry) { instance_double('ContentEntry', content_type: 'test') }
   let(:client) { instance_double('Renderful::Client') }
 
   before(:all) do

@@ -20,7 +20,7 @@ module Renderful
       end
 
       def fetch(_key)
-        nil
+        yield
       end
     end
   end

@@ -18,7 +18,7 @@ module Renderful
       end
 
       def view
-        "renderful/#{entry.content_type.id.demodulize.underscore}"
+        "renderful/#{entry.content_type.demodulize.underscore}"
       end
 
       def default_locals
