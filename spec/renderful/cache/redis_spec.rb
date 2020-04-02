@@ -54,10 +54,24 @@ RSpec.describe Renderful::Cache::Redis do
   end
 
   describe '#delete' do
-    it 'deletes the key from Redis' do
-      cache.delete('key')
+    it 'deletes the keys from Redis' do
+      cache.delete('key1', 'key2')
 
-      expect(redis).to have_received(:del).with('key')
+      expect(redis).to have_received(:del).with('key1', 'key2')
+    end
+  end
+
+  describe '#delete_matched' do
+    before do
+      allow(redis).to receive(:scan_each)
+        .with(match: 'key*')
+        .and_return(%w[key1 key2])
+    end
+
+    it 'deletes all keys from Redis that match the given pattern' do
+      cache.delete_matched('key*')
+
+      expect(redis).to have_received(:del).with('key1', 'key2')
     end
   end
 

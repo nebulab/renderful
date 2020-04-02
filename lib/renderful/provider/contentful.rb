@@ -20,15 +20,15 @@ module Renderful
       def cache_keys_to_invalidate(webhook_body)
         params = webhook_body.is_a?(String) ? JSON.parse(webhook_body) : webhook_body
 
-        modified_entry = ContentEntry.new(
-          provider: self,
-          content_type: params['sys']['contentType']['sys']['id'],
-          id: params['sys']['id'],
-        )
+        keys_to_invalidate = [ContentEntry.build_cache_key(self, id: params['sys']['id'])]
+        keys_to_invalidate += contentful.entries(links_to_entry: params['sys']['id']).map do |entry|
+          ContentEntry.build_cache_key(self, id: entry.id)
+        end
 
-        entries_to_invalidate = [modified_entry] + entries_linking_to(modified_entry)
-
-        entries_to_invalidate.map(&:cache_key)
+        {
+          keys: keys_to_invalidate,
+          patterns: [],
+        }
       end
 
       private
@@ -42,9 +42,7 @@ module Renderful
         )
       end
 
-      def entries_linking_to(entry)
-        contentful.entries(links_to_entry: entry.id).map(&method(:wrap_entry))
-      end
+      def entries_linking_to(entry_id); end
 
       def contentful
         options[:contentful]

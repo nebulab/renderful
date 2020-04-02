@@ -15,7 +15,11 @@ module Renderful
         raise NotImplementedError
       end
 
-      def delete(_key)
+      def delete(*_keys)
+        raise NotImplementedError
+      end
+
+      def delete_matched(_pattern)
         raise NotImplementedError
       end
 

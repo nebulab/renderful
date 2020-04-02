@@ -50,7 +50,7 @@ RSpec.describe Renderful::Client do
     end
 
     context 'when the output has not been cached' do
-      let(:entry) { instance_double('ContentEntry', content_type: 'testContentType', fields: {}) }
+      let(:entry) { instance_double('Renderful::ContentEntry', content_type: 'testContentType', fields: {}) }
 
       before do
         allow(cache).to receive(:fetch).with(an_instance_of(String)) { |_, &block| block.call }
@@ -60,7 +60,7 @@ RSpec.describe Renderful::Client do
           .and_return(entry)
 
         allow(component_klass).to receive(:new)
-          .with(an_instance_of(Renderful::ContentEntry), client: client)
+          .with(entry, client: client)
           .and_return(instance_double('Renderful::Component::Base', render: 'render_output'))
       end
 
@@ -92,13 +92,19 @@ RSpec.describe Renderful::Client do
     before do
       allow(provider).to receive(:cache_keys_to_invalidate)
         .with(payload)
-        .and_return(%w[key1])
+        .and_return(keys: %w[provider:key1 provider:key2], patterns: %w[provider:*])
     end
 
     it 'invalidates the cache keys returned by the provider' do
       client.invalidate_cache_from_webhook(payload)
 
-      expect(cache).to have_received(:delete).with('key1')
+      expect(cache).to have_received(:delete).with('provider:key1', 'provider:key2')
+    end
+
+    it 'invalidates the pattern returned by the provider' do
+      client.invalidate_cache_from_webhook(payload)
+
+      expect(cache).to have_received(:delete_matched).with('provider:*')
     end
   end
 end
