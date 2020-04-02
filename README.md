@@ -29,12 +29,7 @@ Once you have installed the gem, you can configure it like this:
 
 ```ruby
 RenderfulClient = Renderful::Client.new(
-  provider: Renderful::Provider::Contentful.new(
-    contentful: Contentful::Client.new(
-      space: 'YOUR_SPACE_ID',
-      access_key: 'YOUR_ACCESS_KEY',
-    ),
-  ),
+  provider: Renderful::Provider::DummyCms.new(api_key: 'secretApiKey'), # see "Providers"
   components: {
     'jumbotron' => JumbotronComponent,
   },
@@ -176,6 +171,42 @@ You would then access them like regular locals:
   </h1>
   <p class="lead"><%= entry.fields[:content] %></p>
 </div>
+```
+
+## Providers
+
+### Contentful
+
+In order to integrate with Contentful, you will first need to add the `contentful` gem to your
+Gemfile:
+
+```ruby
+gem 'contentful'
+```
+
+Now make sure to install it:
+
+```console
+$ bundle install
+```
+
+Finally, initialize Renderful with the Contentful provider:
+
+```ruby
+RenderfulClient = Renderful::Client.new(
+  provider: Renderful::Provider::Contentful.new(
+    contentful: Contentful::Client.new(
+      space: 'cfexampleapi',
+      access_token: 'b4c0n73n7fu1',
+    )
+  )
+)
+```
+
+You can now render your Contentful entries via Renderful:
+
+```ruby
+RenderfulClient.render('your_entry_id')
 ```
 
 ## Development
