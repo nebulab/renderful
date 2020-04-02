@@ -4,6 +4,12 @@ module Renderful
   class ContentEntry
     attr_reader :provider, :id, :content_type, :fields
 
+    class << self
+      def build_cache_key(provider, id: nil)
+        ['renderful', provider.cache_prefix, id || '*'].join('/')
+      end
+    end
+
     def initialize(provider:, id:, content_type: nil, fields: {})
       @provider = provider
       @id = id
@@ -12,16 +18,7 @@ module Renderful
     end
 
     def cache_key
-      "renderful/#{provider.cache_prefix}/#{id}"
-    end
-
-    def hydrate
-      other_entry = provider.find_entry(id)
-
-      @content_type = other_entry.content_type
-      @fields = other_entry.fields
-
-      self
+      self.class.build_cache_key(provider, id: id)
     end
   end
 end

@@ -21,8 +21,13 @@ module Renderful
         redis.set(key, value)
       end
 
-      def delete(key)
-        redis.del(key)
+      def delete(*keys)
+        redis.del(*keys)
+      end
+
+      def delete_matched(pattern)
+        keys = redis.scan_each(match: pattern).to_a
+        delete(*keys)
       end
 
       def fetch(key)

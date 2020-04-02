@@ -209,6 +209,40 @@ You can now render your Contentful entries via Renderful:
 RenderfulClient.render('your_entry_id')
 ```
 
+### Prismic
+
+In order to integrate with Prismic, you will first need to add the `prismic.io` gem to your Gemfile:
+
+```ruby
+gem 'prismic.io'
+```
+
+Now make sure to install it:
+
+```console
+$ bundle install
+```
+
+Finally, initialize Renderful with the Prismic provider:
+
+```ruby
+RenderfulClient = Renderful::Client.new(
+  provider: Renderful::Provider::Prismic.new(
+    prismic: Prismic.api('https://yourendpoint.prismic.io/api', 'your_access_token')
+  )
+)
+```
+
+You can now render your Prismic documents via Renderful:
+
+```ruby
+RenderfulClient.render('your_entry_id')
+```
+
+NOTE: Due to limitations in Prismic's API, cache invalidation for Prismic will invalidate all your
+components. Depending on how often you update your content, you may want to disable caching entirely
+if you are using Prismic.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run 

@@ -29,6 +29,12 @@ RSpec.describe Renderful::Cache::Null do
     end
   end
 
+  describe '#delete_matched' do
+    it 'is a no-op' do
+      expect { cache.delete_matched('key*') }.not_to raise_error
+    end
+  end
+
   describe '#fetch' do
     it 'always yields' do
       expect(cache.fetch('key') { 'value' }).to eq('value')

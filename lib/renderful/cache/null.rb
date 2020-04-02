@@ -15,7 +15,11 @@ module Renderful
         # noop
       end
 
-      def delete(key)
+      def delete(*keys)
+        # noop
+      end
+
+      def delete_matched(pattern)
         # noop
       end
 

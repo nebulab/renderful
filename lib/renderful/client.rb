@@ -11,17 +11,19 @@ module Renderful
     end
 
     def render(entry_id)
-      content_entry = ContentEntry.new(provider: provider, id: entry_id)
-
-      cache.fetch(content_entry.cache_key) do
-        content_entry.hydrate
+      cache.fetch(ContentEntry.build_cache_key(provider, id: entry_id)) do
+        content_entry = provider.find_entry(entry_id)
         component_for_entry(content_entry).render
       end
     end
 
     def invalidate_cache_from_webhook(body)
-      provider.cache_keys_to_invalidate(body).each do |cache_key|
-        cache.delete(cache_key)
+      result = provider.cache_keys_to_invalidate(body)
+
+      cache.delete(*result[:keys])
+
+      result[:patterns].each do |pattern|
+        cache.delete_matched(pattern)
       end
     end
 

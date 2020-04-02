@@ -116,19 +116,31 @@ RSpec.describe Renderful::Provider::Contentful do
           id: 'linking_entry_id',
         )])
 
-      allow(Renderful::ContentEntry).to receive(:new).with(a_hash_including(id: '6hxhiF6EcKklWANW9BBlVY'))
-                                                     .and_return(instance_double('ContentEntry', id: '6hxhiF6EcKklWANW9BBlVY', cache_key: 'cache/6hxhiF6EcKklWANW9BBlVY'))
+      allow(Renderful::ContentEntry).to receive(:build_cache_key)
+        .with(subject, id: '6hxhiF6EcKklWANW9BBlVY')
+        .and_return('cache/6hxhiF6EcKklWANW9BBlVY')
 
-      allow(Renderful::ContentEntry).to receive(:new).with(a_hash_including(id: 'linking_entry_id'))
-                                                     .and_return(instance_double('ContentEntry', id: 'linking_entry_id', cache_key: 'cache/linking_entry_id'))
+      allow(Renderful::ContentEntry).to receive(:build_cache_key)
+        .with(subject, id: 'linking_entry_id')
+        .and_return('cache/linking_entry_id')
     end
 
     it 'returns the cache key for the invalidated entry' do
-      expect(subject.cache_keys_to_invalidate(payload)).to include('cache/6hxhiF6EcKklWANW9BBlVY')
+      result = subject.cache_keys_to_invalidate(payload)
+
+      expect(result[:keys]).to include('cache/6hxhiF6EcKklWANW9BBlVY')
     end
 
     it 'returns the cache keys for any entries linking to the invalidated one' do
-      expect(subject.cache_keys_to_invalidate(payload)).to include('cache/linking_entry_id')
+      result = subject.cache_keys_to_invalidate(payload)
+
+      expect(result[:keys]).to include('cache/linking_entry_id')
+    end
+
+    it 'does not invalidate any patterns' do
+      result = subject.cache_keys_to_invalidate(payload)
+
+      expect(result[:patterns]).to eq([])
     end
   end
 end

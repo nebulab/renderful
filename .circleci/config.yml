@@ -14,7 +14,10 @@ jobs:
             - renderful-v1-{{ .Branch }}
             - renderful-v1-
       - run:
-          name: Bundle Install
+          name: Bundle install
+          command: bundle check || bundle install
+      - run:
+          name: Appraisal install
           command: bundle exec appraisal install
       - save_cache:
           key: renderful-v1-{{ .Branch }}-{{ .Revision }}
