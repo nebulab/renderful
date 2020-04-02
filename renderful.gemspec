@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'combustion', '~> 1.1'
   spec.add_development_dependency 'contentful', '~> 2.11'
   spec.add_development_dependency 'gem-release', '~> 2.1'
+  spec.add_development_dependency 'prismic.io', '~> 1.7'
   spec.add_development_dependency 'rails', ['>= 5.0.0', '< 7']
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'redis', '~> 4.1'
