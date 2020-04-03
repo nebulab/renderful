@@ -5,13 +5,13 @@ module Renderful
     class Base
       attr_reader :entry, :client
 
-      def initialize(entry, client:)
+      def initialize(entry:, client:)
         @entry = entry
         @client = client
       end
 
       def render
-        raise NotImplementedError
+        fail NotImplementedError
       end
     end
   end

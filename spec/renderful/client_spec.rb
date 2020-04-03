@@ -59,16 +59,19 @@ RSpec.describe Renderful::Client do
           .with(an_instance_of(String))
           .and_return(entry)
 
+        component = instance_double('Renderful::Component::Base')
         allow(component_klass).to receive(:new)
-          .with(entry, client: client)
-          .and_return(instance_double('Renderful::Component::Base', render: 'render_output'))
+          .with(entry: entry, client: client)
+          .and_return(component)
+        allow(component).to receive(:render)
+          .and_return('render_output')
       end
 
       context 'when a component has been registered for the provided content type' do
         let(:components) { { content_type_id => component_klass } }
 
         it 'renders the content type with its component' do
-          result = client.render(entry_id)
+          result = client.render(entry_id, view_context: 'dummy context')
 
           expect(result).to eq('render_output')
         end
