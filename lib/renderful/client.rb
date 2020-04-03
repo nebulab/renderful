@@ -4,16 +4,22 @@ module Renderful
   class Client
     attr_reader :provider, :components, :cache
 
-    def initialize(provider:, components:, cache: Cache::Null)
+    def initialize(provider:, components:, cache: Cache::Null.new)
       @provider = provider
       @components = components
       @cache = cache
     end
 
-    def render(entry_id)
+    def render(entry_id, options = {})
       cache.fetch(ContentEntry.build_cache_key(provider, id: entry_id)) do
         content_entry = provider.find_entry(entry_id)
-        component_for_entry(content_entry).render
+        component = component_for_entry(content_entry)
+
+        if component.respond_to?(:render_in)
+          component.render_in(options.fetch(:view_context))
+        else
+          component.render
+        end
       end
     end
 
@@ -34,7 +40,7 @@ module Renderful
     end
 
     def component_for_entry(content_entry)
-      component_klass_for_entry(content_entry).new(content_entry, client: self)
+      component_klass_for_entry(content_entry).new(entry: content_entry, client: self)
     end
   end
 end

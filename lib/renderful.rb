@@ -13,7 +13,6 @@ require 'renderful/provider/contentful'
 require 'renderful/provider/prismic'
 require 'renderful/client'
 require 'renderful/component/base'
-require 'renderful/component/rails'
 require 'renderful/version'
 
 module Renderful

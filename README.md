@@ -56,7 +56,7 @@ class JumbotronComponent < Renderful::Component
 end
 ```
 
-You can now render this component like this:
+You can now render the component like this:
 
 ```ruby
 RenderfulClient.render('my_entry_id')
@@ -113,64 +113,23 @@ also for any entries linking to it, so that they are re-rendered. This is very u
 if you have a `Page` entry type that contains references to many UI components - when one of the
 components is updated, you want the page to be re-rendered.
 
-### Rails integration
+### ViewComponent support
 
-If you are using Ruby on Rails and you want to use ERB instead of including HTML in your components,
-you can inherit from the Rails component:
-
-```ruby
-class JumbotronComponent < Renderful::Component::Rails
-end
-```
-
-Then, create an `app/views/renderful/_jumbotron.html.erb` partial:
-
-```erb
-<div class="jumbotron">
-  <h1 class="display-4"><%= entry.fields[:title] %></h1>
-  <p class="lead"><%= entry.fields[:content] %></p>
-</div>
-```
-
-As you can see, you can access the content entry via the `entry` local variable.
-
-#### Custom renderer
-
-Rails components use `ActionController::Base.renderer` by default, but this prevents you from
-using your own helpers in components. If you want to use a different renderer instead, you can
-override the `renderer` method:
+Renderful integrates nicely with [ViewComponent](https://github.com/github/view_component) for
+rendering your components:
 
 ```ruby
-class JumbotronComponent < Renderful::Component::Rails
-  def renderer
-    ApplicationController.renderer
-  end
-end
+RenderfulClient = Renderful::Client.new(
+  components: {
+    'jumbotron' => JumbotronComponent, # JumbotronComponent inherits from ViewComponent::Base
+  },
+)
 ``` 
 
-#### Custom locals
-
-If you want, you can also add your own locals:
+However, keep in mind you will now have to pass a view context when rendering them:
 
 ```ruby
-class JumbotronComponent < Renderful::Component::Rails
-  def locals
-    italian_title = entry.title.gsub(/hello/, 'ciao')
-    { italian_title: italian_title }
-  end
-end
-```
-
-You would then access them like regular locals:
-
-```erb
-<div class="jumbotron">
-  <h1 class="display-4">
-    <%= entry.fields[:title] %>
-    (<%= italian_title %>)
-  </h1>
-  <p class="lead"><%= entry.fields[:content] %></p>
-</div>
+RenderfulClient.render('my_entry_id', view_context: view_context)
 ```
 
 ## Providers
@@ -214,7 +173,7 @@ RenderfulClient.render('your_entry_id')
 In order to integrate with Prismic, you will first need to add the `prismic.io` gem to your Gemfile:
 
 ```ruby
-gem 'prismic.io'
+gem 'prismic.io', require: 'prismic'
 ```
 
 Now make sure to install it:
