@@ -4,7 +4,7 @@ module Renderful
   class Client
     attr_reader :provider, :components, :cache
 
-    def initialize(provider:, components:, cache: Cache::Null)
+    def initialize(provider:, components:, cache: Cache::Null.new)
       @provider = provider
       @components = components
       @cache = cache

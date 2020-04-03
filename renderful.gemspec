@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'appraisal', '~> 2.2'
   spec.add_development_dependency 'bundler', '~> 2.1'
+  spec.add_development_dependency 'capybara', '~> 3.32'
   spec.add_development_dependency 'combustion', '~> 1.1'
   spec.add_development_dependency 'contentful', '~> 2.11'
   spec.add_development_dependency 'gem-release', '~> 2.1'
@@ -40,4 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4.1'
   spec.add_development_dependency 'rubocop', '~> 0.79.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.37'
+  spec.add_development_dependency 'vcr', '~> 5.1'
+  spec.add_development_dependency 'view_component', '~> 2.2'
+  spec.add_development_dependency 'webmock', '~> 3.8'
 end

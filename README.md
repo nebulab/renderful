@@ -173,7 +173,7 @@ RenderfulClient.render('your_entry_id')
 In order to integrate with Prismic, you will first need to add the `prismic.io` gem to your Gemfile:
 
 ```ruby
-gem 'prismic.io'
+gem 'prismic.io', require: 'prismic'
 ```
 
 Now make sure to install it:

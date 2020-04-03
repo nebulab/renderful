@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://renderfultest.cdn.prismic.io/api/v1/documents/search?lang=*&page=1&pageSize=20&q=%5B%5B:d%20=%20at(document.id,%20%22XodtshAAACIACgDj%22)%5D%5D&ref=XodttRAAACEACgD0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - max-age=315360000
+      Date:
+      - Fri, 03 Apr 2020 17:28:40 GMT
+      Server:
+      - nginx
+      X-Ratelimit-Limit:
+      - '200'
+      X-Ratelimit-Remaining:
+      - '141'
+      X-Ratelimit-Reset:
+      - '1585934920'
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 55dad469c6d0d2d145c29e97d10ad98a.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - LHR3-C1
+      X-Amz-Cf-Id:
+      - K0wBniS8GL1FvV5k9sc_VMrPBfcOMlzXBVV2SeQTCDCizRifug6frw==
+    body:
+      encoding: ASCII-8BIT
+      string: '{"page":1,"results_per_page":20,"results_size":1,"total_results_size":1,"total_pages":1,"next_page":null,"prev_page":null,"results":[{"id":"XodtshAAACIACgDj","uid":null,"type":"page","href":"https://renderfultest.cdn.prismic.io/api/v1/documents/search?ref=XodttRAAACEACgD0&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22XodtshAAACIACgDj%22%29+%5D%5D","tags":[],"first_publication_date":"2020-04-03T17:09:09+0000","last_publication_date":"2020-04-03T17:09:09+0000","slugs":["homepage"],"linked_documents":[],"lang":"en-us","alternate_languages":[],"data":{"page":{"title":{"type":"Text","value":"Homepage"}}}}],"version":"ce99746","license":"All
+        Rights Reserved"}'
+    http_version: null
+  recorded_at: Fri, 03 Apr 2020 17:28:40 GMT
+recorded_with: VCR 5.1.0
