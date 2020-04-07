@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'contentful'
-
 require 'renderful/error/base'
 require 'renderful/error/no_component_error'
 require 'renderful/cache/base'
