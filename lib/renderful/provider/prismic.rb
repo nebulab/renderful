@@ -14,7 +14,10 @@ module Renderful
       end
 
       def find_entry(entry_id)
-        wrap_entry(prismic.getByID(entry_id))
+        entry = prismic.getByID(entry_id)
+        raise Error::EntryNotFoundError, entry_id unless entry
+
+        wrap_entry(entry)
       end
 
       def cache_keys_to_invalidate(_webhook_body)

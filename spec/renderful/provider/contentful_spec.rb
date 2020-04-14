@@ -49,6 +49,18 @@ RSpec.describe Renderful::Provider::Contentful do
 
       expect(content_entry.provider).to eq(subject)
     end
+
+    context 'when entry not found' do
+      it 'raises an error' do
+        allow(contentful).to receive(:entry)
+          .with(entry_id)
+          .and_return(nil)
+
+        expect do
+          subject.find_entry(entry_id)
+        end.to raise_error(Renderful::Error::EntryNotFoundError)
+      end
+    end
   end
 
   describe '#cache_keys_to_invalidate' do
