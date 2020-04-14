@@ -34,7 +34,7 @@ RenderfulClient = Renderful::Client.new(
     'jumbotron' => JumbotronComponent,
   },
 )
-``` 
+```
 
 ## Usage
 
@@ -48,8 +48,8 @@ class JumbotronComponent < Renderful::Component
   def render
     <<~HTML
       <div class="jumbotron">
-        <h1 class="display-4"><%= entry.fields[:title] %></h1>
-        <p class="lead"><%= entry.fields[:content] %></p>
+        <h1 class="display-4">#{ entry.title }</h1>
+        <p class="lead">#{ entry.content }</p>
       </div>
     HTML
   end
@@ -72,7 +72,7 @@ RenderfulClient = Renderful.new(
   cache: Renderful::Cache::Redis.new(Redis.new(url: 'redis://localhost:6379')),
   # ...
 )
-``` 
+```
 
 If you are using Rails and want to use the Rails cache store for Renderful, you can simply pass
 `Rails.cache`, which responds to the expected interface:
@@ -82,7 +82,7 @@ RenderfulClient = Renderful.new(ful,
   cache: Rails.cache,
   # ...
 )
-``` 
+```
 
 #### Cache invalidation
 
@@ -204,13 +204,13 @@ if you are using Prismic.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run 
-the tests. You can also run `bin/console` for an interactive prompt that will allow you to 
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run
+the tests. You can also run `bin/console` for an interactive prompt that will allow you to
 experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new 
-version, update the version number in `version.rb`, and then run `bundle exec rake release`, which 
-will create a git tag for the version, push git commits and tags, and push the `.gem` file to 
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new
+version, update the version number in `version.rb`, and then run `bundle exec rake release`, which
+will create a git tag for the version, push git commits and tags, and push the `.gem` file to
 [rubygems.org](https://rubygems.org).
 
 ## Contributing
