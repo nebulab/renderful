@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'renderful/error/base'
+require 'renderful/error/entry_not_found_error'
 require 'renderful/error/no_component_error'
 require 'renderful/cache/base'
 require 'renderful/cache/redis'
