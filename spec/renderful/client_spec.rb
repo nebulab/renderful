@@ -92,16 +92,31 @@ RSpec.describe Renderful::Client do
 
     let(:payload) { 'dummy payload' }
 
+    let(:returned_keys) { %w[provider:key1 provider:key2] }
+    let(:returned_patterns) { %w[provider:*] }
+
     before do
       allow(provider).to receive(:cache_keys_to_invalidate)
         .with(payload)
-        .and_return(keys: %w[provider:key1 provider:key2], patterns: %w[provider:*])
+        .and_return(keys: returned_keys, patterns: returned_patterns)
     end
 
-    it 'invalidates the cache keys returned by the provider' do
-      client.invalidate_cache_from_webhook(payload)
+    context 'when cache keys are returned for invalidation' do
+      it 'invalidates the cache keys returned by the provider' do
+        client.invalidate_cache_from_webhook(payload)
 
-      expect(cache).to have_received(:delete).with('provider:key1', 'provider:key2')
+        expect(cache).to have_received(:delete).with('provider:key1', 'provider:key2')
+      end
+    end
+
+    context 'when no cache keys are returned for invalidation' do
+      let(:returned_keys) { [] }
+
+      it 'does not call #delete at all' do
+        client.invalidate_cache_from_webhook(payload)
+
+        expect(cache).not_to have_received(:delete)
+      end
     end
 
     it 'invalidates the pattern returned by the provider' do

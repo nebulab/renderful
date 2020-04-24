@@ -26,7 +26,7 @@ module Renderful
     def invalidate_cache_from_webhook(body)
       result = provider.cache_keys_to_invalidate(body)
 
-      cache.delete(*result[:keys])
+      cache.delete(*result[:keys]) if result[:keys].any?
 
       result[:patterns].each do |pattern|
         cache.delete_matched(pattern)
