@@ -1,8 +1,16 @@
 # Changelog
 
-## [Unreleased](https://github.com/nebulab/renderful/tree/HEAD)
+## [v0.3.1](https://github.com/nebulab/renderful/tree/v0.3.1) (2020-04-24)
 
-[Full Changelog](https://github.com/nebulab/renderful/compare/v0.2.0...HEAD)
+[Full Changelog](https://github.com/nebulab/renderful/compare/v0.3.0...v0.3.1)
+
+**Merged pull requests:**
+
+- Skip calls to cache store when no keys must be invalidated [\#25](https://github.com/nebulab/renderful/pull/25) ([aldesantis](https://github.com/aldesantis))
+
+## [v0.3.0](https://github.com/nebulab/renderful/tree/v0.3.0) (2020-04-20)
+
+[Full Changelog](https://github.com/nebulab/renderful/compare/v0.2.0...v0.3.0)
 
 **Closed issues:**
 
@@ -24,6 +32,7 @@
 - Fix a typo and trim whitespace in the README [\#18](https://github.com/nebulab/renderful/pull/18) ([elia](https://github.com/elia))
 - Prismic integration [\#17](https://github.com/nebulab/renderful/pull/17) ([aldesantis](https://github.com/aldesantis))
 - Support for multiple providers [\#16](https://github.com/nebulab/renderful/pull/16) ([aldesantis](https://github.com/aldesantis))
+- Update linting and testing infrastructure [\#6](https://github.com/nebulab/renderful/pull/6) ([aldesantis](https://github.com/aldesantis))
 
 ## [v0.2.0](https://github.com/nebulab/renderful/tree/v0.2.0) (2020-01-17)
 
@@ -35,7 +44,6 @@
 
 **Merged pull requests:**
 
-- Update linting and testing infrastructure [\#6](https://github.com/nebulab/renderful/pull/6) ([aldesantis](https://github.com/aldesantis))
 - Add support for Rails 6 [\#5](https://github.com/nebulab/renderful/pull/5) ([aldesantis](https://github.com/aldesantis))
 
 ## [v0.1.0](https://github.com/nebulab/renderful/tree/v0.1.0) (2019-05-02)
